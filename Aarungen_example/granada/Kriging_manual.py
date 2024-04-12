@@ -251,14 +251,12 @@ x = OBS_XYZ_gdf['Shape_X'].values
 y = OBS_XYZ_gdf['Shape_Y'].values
 z = OBS_XYZ_gdf['blengdber_'].values
 
-# Parameters: range: 3600, sill: 47, nugget: 6, from maxlag=0.4
-# Parameters: range: 4450, sill: 49, nugget: 6, from maxlag=0.38
 
 # Exp curve_fit auto: range: 1826.09   sill: 45.8   nugget: -2.67
-# Exp model auto: range: 2275, sill: 43, nugget: 9
-range_param = 1826.09
-sill = 43
-nugget = 9
+
+range_param = 2275
+sill = 1
+nugget = 1
 
 # Variogram with custom parameters
 variogram_parameters = {'sill': sill, 'nugget': nugget, 'range': range_param}
@@ -415,3 +413,68 @@ plt.xlabel("X-coordinate")
 plt.ylabel("Y-coordinate")
 plt.legend(loc='upper left')
 plt.show()
+
+
+#%% Autofit Scaled values
+
+
+from sklearn.preprocessing import StandardScaler
+
+# Initialize the StandardScaler
+scaler = StandardScaler()
+
+# Reshape z to a 2D array as StandardScaler expects a 2D array as input
+z_2d = z.reshape(-1, 1)
+
+# Fit the scaler to the data and transform the data
+z_standardized = scaler.fit_transform(z_2d)
+
+# Reshape the standardized data back to a 1D array
+z = z_standardized.flatten()
+
+# Exp model auto: Sill: 1.029, Range: 2364.711, nugget: 10e-10
+
+range_param = 2265
+sill = 1.03
+nugget = 10e-10
+
+
+# Variogram with custom parameters
+variogram_parameters = {'sill': sill, 'nugget': nugget, 'range': range_param}
+
+
+# Create the kriging object
+OK = OrdinaryKriging(
+    x,
+    y,
+    z,
+    variogram_model='exponential',
+    verbose=True,
+    enable_plotting=True,
+    variogram_parameters=variogram_parameters
+)
+
+# Perform the kriging interpolation
+z_pred, ss = OK.execute('grid', wxvec, wyvec)
+
+# We use RMSE of the kriging errors as a quick measure as we belive it is a 
+# semi- accurate method
+RMSE = np.sqrt(np.mean(ss**2))
+print(RMSE)
+
+proportion = len(wxvec)/len(wyvec)
+plot_size = 8
+
+
+# Plot the kriging result
+plt.figure(figsize=(plot_size*proportion, plot_size))
+plt.scatter(x, y, c=z, cmap="viridis", marker="o", s=30, label="Borehole Data")
+plt.contourf(wxvec, wyvec, z_pred, levels=100, cmap="viridis", alpha=0.8)
+plt.colorbar(label="Interpolated Value")
+plt.title("Regular data Exponential kriging")
+plt.xlabel("X-coordinate")
+plt.ylabel("Y-coordinate")
+plt.legend(loc='upper left')
+plt.show()
+
+### Find results for this model in Kriging_ML

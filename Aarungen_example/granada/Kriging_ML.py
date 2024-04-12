@@ -86,8 +86,6 @@ def calc_random_state(random_states):
         
         
 #%% K-Fold Cross validation
-# Variogram with custom parameters 'range': 5661   'sill': 50   'nugget': 0
-variogram_parameters = {'range': 2573, 'sill': 50, 'nugget': 1}
   
 def validate_kriging(model, variogram_parameters, X, y, wxvec, wyvec):
     mse_dict['Model'] = []
@@ -108,9 +106,9 @@ def validate_kriging(model, variogram_parameters, X, y, wxvec, wyvec):
             y_train,        # Z values from training set
             variogram_model=model,  # Adjust variogram model as needed
             verbose=False,
-            # variogram_parameters = variogram_parameters, # COMMENT OUT, if no params wanted, Note! With universal params, probably scores better
-            anisotropy_angle=-45,
-            anisotropy_scaling=2.2,
+            variogram_parameters = variogram_parameters, # COMMENT OUT, if no params wanted, Note! With universal params, probably scores better
+            #anisotropy_angle=-45,
+            #anisotropy_scaling=2.2,
         )
         
         z_pred, ss = OK.execute('grid', wxvec, wyvec)
@@ -153,54 +151,32 @@ def validate_kriging(model, variogram_parameters, X, y, wxvec, wyvec):
     print(f"K fold CV {OK.variogram_model} Model performance")
     print(f"Mean Squared Error (MSE): {np.median(mse_dict['Model'])} R^2 : {np.median(r2_dict['Model'])}")
 
+variogram_parameters = {'range': 2275, 'sill': 43, 'nugget': 9}
 simple_model = validate_kriging('exponential', variogram_parameters, X, y, wxvec, wyvec)  
 
-
-#iso_model = validate_kriging('exponential', variogram_parameters, final_data, y, fwxvec, fwyvec)   
-
-# Performances of No parameters, 5 K-Fold cross validation, random state 42
-# All so far in minx, maxx, miny, maxy grid
-
-# As we can see from the results there is not a significant difference in the 
-# model performances hinting to the idea that it is not an important matter
+#variogram_parameters = {'range': 2573, 'sill': 50, 'nugget': 1}
+#iso_model = validate_kriging('exponential', variogram_parameters, final_data, y, fwxvec, fwyvec)  
 
 
-# K fold CV Gaussian Model  performance
-# Mean Squared Error (MSE): 18.66744320276828 R^2 : 0.5776519306859222
+#%% Standardscaled method
 
-# K fold CV Exponential Model performance
-# Mean Squared Error (MSE): 19.413058900893333 R^2 : 0.49039571659593295
+# variogram_parameters = {'range': 2364.711, 'sill': 1.029, 'nugget': 10e-10}
+# from sklearn.preprocessing import StandardScaler
+# # Initialize the StandardScaler
+# scaler = StandardScaler()
 
-# K fold CV Spherical Model performance
-# Mean Squared Error (MSE): 21.004360612666225 R^2 : 0.4495966743722781
+# # Reshape z to a 2D array as StandardScaler expects a 2D array as input
+# y_2d = y.reshape(-1, 1)
 
+# # Fit the scaler to the data and transform the data
+# y_standardized = scaler.fit_transform(y_2d)
 
-
-### The following models had pre trained semivariogram on the kriging 
-# estimates, allowing them to take information from all samples. This in turn
-# gives them an advantage
-
-
-# Exponential variogram_parameters = {'range': 3600, 'sill': 47, 'nugget': 6}
-# Mean Squared Error (MSE): 15.868838570425993 R^2 : 0.6579035100750341
-
-# Exponential variogram_parameters = {'range': 4450, 'sill': 50, 'nugget': 8}
-# Mean Squared Error (MSE): 15.870299156675134 R^2 : 0.6637436800480508
-
-# Exponential variogram auto = {'range': 2275, 'sill': 43, 'nugget': 9}
-# Mean Squared Error (MSE): 15.79534507375323 R^2 : 0.6555443932512088
-
-# Gaussian variogram_parameters = {'range': 2853.6, 'sill': 33, 'nugget': 17}
-# Mean Squared Error (MSE): 23.084210885922303 R^2 : 0.41581616496977114
-
-# Gaussian variogram_parameters = {'range': 3869, 'sill': 35, 'nugget': 20}
-# Mean Squared Error (MSE): 29.035078953682696 R^2 : 0.31322368230399633
-
-# Gaussian variogram auto = {'range': 1841, 'sill': 42.7, 'nugget': 3}
-# Mean Squared Error (MSE): 18.747748904050944 R^2 : 0.5789548894759752 # Does not score better than pretrained. Interesting
+# # Reshape the standardized data back to a 1D array
+# y_standardized = y_standardized.flatten()
+# SS_model = simple_model = validate_kriging('exponential', variogram_parameters, X, y_standardized, wxvec, wyvec)  
 
 
-
+#%% Model results
 
 ### Results no set max values. Dataset decides bounds. A more fair way to decide since our
 # machine learning algorithms uses this method
@@ -243,6 +219,8 @@ simple_model = validate_kriging('exponential', variogram_parameters, X, y, wxvec
 
 
 
+
+
 ### Scaled data, scaled grid (Exponential)
 
 # Scaled data + grid rotation no parameters
@@ -253,3 +231,10 @@ simple_model = validate_kriging('exponential', variogram_parameters, X, y, wxvec
 
 # Scaled data + grid rotation auto = {'range': 2573, 'sill': 50, 'nugget': 1}
 # Mean Squared Error (MSE): 13.109747763082838 R^2 : 0.6510790817093608
+
+
+
+### Standardscaled data (Exponential)
+
+# Exponential auto = {'range': 2364.711, 'sill': 1.029, 'nugget': 10e-10}
+# Mean Squared Error (MSE): 0.34771898049166133 R^2 : 0.6080331043135608

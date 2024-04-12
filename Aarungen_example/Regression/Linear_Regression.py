@@ -150,9 +150,14 @@ SVR_grid = GridSearchCV(estimator=model, param_grid=param_grid, scoring=scoring,
 SVR_grid.fit(X, y)
 
 # Print best parameters and best scores
-print("SVM Best Parameters: ", SVR_grid.best_params_)
+print("SVR Best Parameters: ", SVR_grid.best_params_)
 print("Best MSE: ", -SVR_grid.best_score_)  # Negate the score to get MSE
 print("Best R^2: ", SVR_grid.cv_results_['mean_test_R^2'][SVR_grid.best_index_])
+
+
+# SVM Best Parameters:  {'C': 100, 'gamma': 'auto', 'kernel': 'rbf'}
+# Best MSE:  43.26780481360569
+# Best R^2:  -0.002868315409111455
 
 
 #%% KNN (Best model so far)
@@ -172,7 +177,7 @@ cv = KFold(n_splits=5, shuffle=True, random_state=42)
 
 # Define the parameter grid to search
 param_grid = {
-    'n_neighbors': [2, 3, 5, 7, 9],  # Number of neighbors to use
+    'n_neighbors': [2, 3, 4, 5, 7],  # Number of neighbors to use
     'weights': ['uniform', 'distance'],  # Weight function used in prediction
     'p': [1, 2]  # Power parameter for the Minkowski metric (1 for Manhattan distance, 2 for Euclidean distance)
 }
