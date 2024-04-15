@@ -14,7 +14,7 @@ from sklearn.metrics import mean_squared_error, r2_score
 
 # import grid
 from Granada_plotting import minx, maxx, miny, maxy, wxvec, wyvec
-#from Kriging_manual import fwxvec, fwyvec, final_data
+# from Kriging_manual import fwxvec, fwyvec, final_data
 
 
 #%% Import obs_xyz_gdf
@@ -151,16 +151,16 @@ def validate_kriging(model, variogram_parameters, X, y, wxvec, wyvec):
     print(f"K fold CV {OK.variogram_model} Model performance")
     print(f"Mean Squared Error (MSE): {np.median(mse_dict['Model'])} R^2 : {np.median(r2_dict['Model'])}")
 
-variogram_parameters = {'range': 2275, 'sill': 43, 'nugget': 9}
+variogram_parameters = {'range': 1400, 'sill': 50, 'nugget': 1}
 simple_model = validate_kriging('exponential', variogram_parameters, X, y, wxvec, wyvec)  
 
-#variogram_parameters = {'range': 2573, 'sill': 50, 'nugget': 1}
-#iso_model = validate_kriging('exponential', variogram_parameters, final_data, y, fwxvec, fwyvec)  
+# variogram_parameters = {'range': 2573, 'sill': 50, 'nugget': 4}
+# iso_model = validate_kriging('exponential', variogram_parameters, final_data, y, fwxvec, fwyvec)  
 
 
 #%% Standardscaled method
 
-# variogram_parameters = {'range': 2364.711, 'sill': 1.029, 'nugget': 10e-10}
+# variogram_parameters = {'range': 2364.711, 'sill': 1.029, 'nugget': 13e-2}
 # from sklearn.preprocessing import StandardScaler
 # # Initialize the StandardScaler
 # scaler = StandardScaler()
@@ -182,23 +182,17 @@ simple_model = validate_kriging('exponential', variogram_parameters, X, y, wxvec
 # machine learning algorithms uses this method
 
 
-# Exponential Model no parameters
-# Mean Squared Error (MSE): 15.105036307839448 R^2 : 0.6082944361952713
-
-# Gaussian Model no parameters 
-# Mean Squared Error (MSE): 19.741580605701273 R^2 : 0.59946555250808
-
-
-
 # Exponential auto = {'range': 2275, 'sill': 43, 'nugget': 9}
 # Mean Squared Error (MSE): 14.446088453440906 R^2 : 0.6845731379708244
 
-# Exponential  curve_fit auto = {'range': 1826.09, 'sill':49, 'nugget': 3}
+# Exponential auto, increased nugget = {'range': 2275, 'sill': 43, 'nugget': 5}
+# Mean Squared Error (MSE): 14.618441232659178 R^2 : 0.7018142644963032
+
+# Exponential curve_fit auto = {'range': 1826.09, 'sill':46, 'nugget': 3}
 # Mean Squared Error (MSE): 14.440706870059156 R^2 : 0.680266329914254
 
-# Exponential variogram_parameters = {'range': 4450, 'sill': 50, 'nugget': 8}
-# Mean Squared Error (MSE): 15.264512394915675 R^2 : 0.6783273520739201
-
+# Exponential curve_fit auto increased nugget variogram_parameters = {'range': 1826.09, 'sill':46, 'nugget': 7}
+# Mean Squared Error (MSE): 14.59104036688992 R^2 : 0.7019221067014002
 
 # Gaussian auto = {'range': 1841, 'sill': 42.7, 'nugget': 3}
 # Mean Squared Error (MSE): 19.282778547339188 R^2 : 0.5935331608773511
@@ -207,9 +201,6 @@ simple_model = validate_kriging('exponential', variogram_parameters, X, y, wxvec
 
 
 ### Pykrige manual Rotation (Exponential)
-
-# Pykrige manual Rotation no paramters
-# Mean Squared Error (MSE): 19.069245273672514 R^2 : 0.5257915472285244
 
 # Pykrige manual rotation curve_fit = {'range': 1403.38, 'sill': 45.2, 'nugget': 1}
 # Mean Squared Error (MSE): 14.00396335934763 R^2 : 0.6339027939245951
@@ -223,14 +214,14 @@ simple_model = validate_kriging('exponential', variogram_parameters, X, y, wxvec
 
 ### Scaled data, scaled grid (Exponential)
 
-# Scaled data + grid rotation no parameters
-# Mean Squared Error (MSE): 22.537610612376998 R^2 : 0.49189835829971684
-
 # Scaled data + grid rotation curve_fit = {'range': 1403.38, 'sill': 45.2, 'nugget': 1}
 # Mean Squared Error (MSE): 13.337889181805641 R^2 : 0.6508671516088331
 
 # Scaled data + grid rotation auto = {'range': 2573, 'sill': 50, 'nugget': 1}
 # Mean Squared Error (MSE): 13.109747763082838 R^2 : 0.6510790817093608
+
+# Scaled data + grid rotation auto increased nugget = {'range': 2573, 'sill': 50, 'nugget': 4}
+# Mean Squared Error (MSE): 13.057165994120027 R^2 : 0.6600401052063576
 
 
 
@@ -238,3 +229,6 @@ simple_model = validate_kriging('exponential', variogram_parameters, X, y, wxvec
 
 # Exponential auto = {'range': 2364.711, 'sill': 1.029, 'nugget': 10e-10}
 # Mean Squared Error (MSE): 0.34771898049166133 R^2 : 0.6080331043135608
+
+# Exponential auto increased nugget = {'range': 2364.711, 'sill': 1.029, 'nugget': 13e-2}
+# Mean Squared Error (MSE): 0.3376857242191685 R^2 : 0.7029630086626447

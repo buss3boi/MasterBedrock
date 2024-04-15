@@ -33,16 +33,15 @@ subset = src.read(1, window=window)
 show(subset, cmap='terrain')
 
 
-window_coords = [(wminx, wminy), (wminx, wmaxy), (wmaxx, wminy), (wmaxx, wmaxy)]
-
 # Create a single figure and axis for both the image and the red dots
-fig, ax = plt.subplots()
-
-# Show the original DEM data with cmap 'terrain' on the same axis
-show(src, cmap='terrain', ax=ax)
+fig, ax = plt.subplots(figsize=(10, 8))
 
 # Show the subset of the DEM data with cmap 'terrain' on the same axis
-show(subset, cmap='terrain', ax=ax)
+retted = show(subset, cmap='terrain', ax=ax)
+im = retted.get_images()[0]
+fig.colorbar(im,fraction=0.029, pad=0.04)
+plt.title('Digital Elevation Model')
+plt.savefig('Digital_Elevation_Model.png',  dpi=300, bbox_inches='tight')
 
 
 
