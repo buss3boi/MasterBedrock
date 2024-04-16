@@ -107,8 +107,8 @@ def validate_kriging(model, variogram_parameters, X, y, wxvec, wyvec):
             variogram_model=model,  # Adjust variogram model as needed
             verbose=False,
             variogram_parameters = variogram_parameters, # COMMENT OUT, if no params wanted, Note! With universal params, probably scores better
-            #anisotropy_angle=-45,
-            #anisotropy_scaling=2.2,
+            anisotropy_angle=-45,
+            anisotropy_scaling=1,
         )
         
         z_pred, ss = OK.execute('grid', wxvec, wyvec)
@@ -151,7 +151,7 @@ def validate_kriging(model, variogram_parameters, X, y, wxvec, wyvec):
     print(f"K fold CV {OK.variogram_model} Model performance")
     print(f"Mean Squared Error (MSE): {np.median(mse_dict['Model'])} R^2 : {np.median(r2_dict['Model'])}")
 
-variogram_parameters = {'range': 2050, 'sill': 44, 'nugget': 6}
+variogram_parameters = {'range': 2275, 'sill': 43, 'nugget': 5}
 simple_model = validate_kriging('exponential', variogram_parameters, X, y, wxvec, wyvec)  
 
 # variogram_parameters = {'range': 2573, 'sill': 50, 'nugget': 4}
@@ -207,6 +207,9 @@ simple_model = validate_kriging('exponential', variogram_parameters, X, y, wxvec
 
 # Pykrige manual rotation auto = {'range': 5661, 'sill': 50, 'nugget': 1}
 # Mean Squared Error (MSE): 14.109764050732473 R^2 : 0.6244632682171374
+
+
+
 
 
 

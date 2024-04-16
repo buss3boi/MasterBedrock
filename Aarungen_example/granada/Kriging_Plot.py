@@ -189,3 +189,51 @@ ax.view_init(elev=35, azim=-60)
 
 plt.savefig('kriging_pred_surface_nug.png')
 plt.show()
+
+
+#%% Kriging pykrige scaled data
+
+
+# Variogram with custom parameters
+variogram_parameters = {'range': 5661, 'sill': 50, 'nugget': 1}
+
+
+# Create the kriging object
+OK = OrdinaryKriging(
+    x,
+    y,
+    z,
+    variogram_model='exponential',
+    verbose=True,
+    enable_plotting=True,
+    variogram_parameters=variogram_parameters,
+    anisotropy_angle=-45,
+    anisotropy_scaling=2.2,
+)
+
+# Perform the kriging interpolation
+z_pred, ss = OK.execute('grid', wxvec, wyvec)
+
+# Assuming you have already calculated z_pred and created wxvec, wyvec
+
+# Create meshgrid from wxvec and wyvec
+wx, wy = np.meshgrid(wxvec, wyvec)
+
+# Plot the 3D surface
+fig = plt.figure(figsize=(10, 8))
+ax = fig.add_subplot(111, projection='3d')
+surf = ax.plot_surface(wx, wy, z_pred, cmap='viridis')
+
+# Add labels and title
+ax.set_xlabel('X')
+ax.set_ylabel('Y')
+ax.set_zlabel('Z (Predicted)')
+ax.set_title('Kriging Prediction Surface Pykrige Scaled')
+
+# Add a color bar which maps values to colors
+fig.colorbar(surf, shrink=0.5, aspect=5)
+
+ax.view_init(elev=35, azim=-60)
+
+plt.savefig('kriging_pred_surface_pykrige_scaled.png')
+plt.show()
