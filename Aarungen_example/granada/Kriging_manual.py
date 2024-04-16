@@ -162,10 +162,21 @@ def fit_and_plot_variogram(variogram, model_func, initial_guess=None):
 
 #%% Fit curves to experimental semivariograms
 
-# So far the best results was found on maxlag=0.4
+# 1
 simple_variogram = skg.Variogram(OBS_XYZ_gdf[['Shape_X', 'Shape_Y']], OBS_XYZ_gdf['blengdber_'], n_lags=100)
 simple_semivar = fit_and_plot_variogram(simple_variogram, models.exponential)
 
+fix, ax = plt.subplots(1,1,figsize=(8,6))
+
+ax.plot(simple_variogram.bins, simple_variogram.experimental, '.--r', label='Anisotropic Variogram')
+ax.plot(simple_semivar[0], simple_semivar[1], '-r', label='Anisotropic semivar')
+
+ax.set_xlabel('lag [m]')
+ax.set_ylabel('semi-variance (matheron)')
+plt.legend(loc='upper left')
+plt.savefig('skgstat_semivariogram.png')
+
+# 2
 isotropic_variogram = skg.Variogram(final_data, OBS_XYZ_gdf['blengdber_'], n_lags=100)
 isotropic_semivar = fit_and_plot_variogram(isotropic_variogram, models.exponential)
 
@@ -181,6 +192,7 @@ ax.plot(isotropic_semivar[0], isotropic_semivar[1], '-b', label='Isotropic semiv
 ax.set_xlabel('lag [m]')
 ax.set_ylabel('semi-variance (matheron)')
 plt.legend(loc='upper left')
+plt.savefig('both_skgstat_semivariograms.png')
 
 
 
@@ -275,6 +287,7 @@ OK = OrdinaryKriging(
 
 # Perform the kriging interpolation
 z_pred, ss = OK.execute('grid', wxvec, wyvec)
+
 
 # We use RMSE of the kriging errors as a quick measure as we belive it is a 
 # semi- accurate method

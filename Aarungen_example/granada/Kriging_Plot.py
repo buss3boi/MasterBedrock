@@ -46,6 +46,109 @@ z = OBS_XYZ_gdf['Z'].values
 
 
 # Variogram with custom parameters
+variogram_parameters = {'range': 2275, 'sill': 43, 'nugget': 9.2e-10}
+
+
+# Create the kriging object
+OK = OrdinaryKriging(
+    x,
+    y,
+    z,
+    variogram_model='exponential',
+    verbose=True,
+    enable_plotting=True,
+    variogram_parameters=variogram_parameters
+)
+
+# Perform the kriging interpolation
+z_pred, ss = OK.execute('grid', wxvec, wyvec)
+
+# Assuming you have already calculated z_pred and created wxvec, wyvec
+
+# Create meshgrid from wxvec and wyvec
+wx, wy = np.meshgrid(wxvec, wyvec)
+
+# Plot the 3D surface
+fig = plt.figure(figsize=(10, 8))
+ax = fig.add_subplot(111, projection='3d')
+surf = ax.plot_surface(wx, wy, z_pred, cmap='viridis')
+
+# Add labels and title
+ax.set_xlabel('X')
+ax.set_ylabel('Y')
+ax.set_zlabel('Z (Predicted)')
+ax.set_title('Kriging Prediction Surface')
+
+# Add a color bar which maps values to colors
+fig.colorbar(surf, shrink=0.5, aspect=5)
+
+ax.view_init(elev=35, azim=-60)
+
+plt.savefig('kriging_pred_surface.png')
+plt.show()
+
+
+
+#%% Curve fit prediction surface
+
+# Extracting X, Y, and Z values from OBS_XYZ
+x = OBS_XYZ_gdf['X'].values
+y = OBS_XYZ_gdf['Y'].values
+z = OBS_XYZ_gdf['Z'].values
+
+
+# Exponential auto, increased nugget = {'range': 2275, 'sill': 43, 'nugget': 5}
+# Exponential curve_fit auto increased nugget variogram_parameters = {'range': 1826.09, 'sill':46, 'nugget': 7}
+
+
+
+# Variogram with custom parameters
+variogram_parameters = {'range': 1826.09, 'sill':46, 'nugget': 10e-10}
+
+
+# Create the kriging object
+OK = OrdinaryKriging(
+    x,
+    y,
+    z,
+    variogram_model='exponential',
+    verbose=True,
+    enable_plotting=True,
+    variogram_parameters=variogram_parameters
+)
+
+# Perform the kriging interpolation
+z_pred, ss = OK.execute('grid', wxvec, wyvec)
+
+# Assuming you have already calculated z_pred and created wxvec, wyvec
+
+# Create meshgrid from wxvec and wyvec
+wx, wy = np.meshgrid(wxvec, wyvec)
+
+# Plot the 3D surface
+fig = plt.figure(figsize=(10, 8))
+ax = fig.add_subplot(111, projection='3d')
+surf = ax.plot_surface(wx, wy, z_pred, cmap='viridis')
+
+# Add labels and title
+ax.set_xlabel('X')
+ax.set_ylabel('Y')
+ax.set_zlabel('Z (Predicted)')
+ax.set_title('Kriging Prediction Surface skgstat')
+
+# Add a color bar which maps values to colors
+fig.colorbar(surf, shrink=0.5, aspect=5)
+
+ax.view_init(elev=35, azim=-60)
+
+plt.savefig('kriging_pred_surface_skg.png')
+plt.show()
+
+
+#%% Kriging increased nugget prediction surface
+
+
+# Variogram with custom parameters
 variogram_parameters = {'range': 2275, 'sill': 43, 'nugget': 5}
 
 
@@ -84,6 +187,5 @@ fig.colorbar(surf, shrink=0.5, aspect=5)
 
 ax.view_init(elev=35, azim=-60)
 
-# Show plot
+plt.savefig('kriging_pred_surface_nug.png')
 plt.show()
-

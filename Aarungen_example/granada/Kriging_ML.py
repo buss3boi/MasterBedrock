@@ -151,7 +151,7 @@ def validate_kriging(model, variogram_parameters, X, y, wxvec, wyvec):
     print(f"K fold CV {OK.variogram_model} Model performance")
     print(f"Mean Squared Error (MSE): {np.median(mse_dict['Model'])} R^2 : {np.median(r2_dict['Model'])}")
 
-variogram_parameters = {'range': 1400, 'sill': 50, 'nugget': 1}
+variogram_parameters = {'range': 2050, 'sill': 44, 'nugget': 6}
 simple_model = validate_kriging('exponential', variogram_parameters, X, y, wxvec, wyvec)  
 
 # variogram_parameters = {'range': 2573, 'sill': 50, 'nugget': 4}
@@ -182,14 +182,14 @@ simple_model = validate_kriging('exponential', variogram_parameters, X, y, wxvec
 # machine learning algorithms uses this method
 
 
-# Exponential auto = {'range': 2275, 'sill': 43, 'nugget': 9}
-# Mean Squared Error (MSE): 14.446088453440906 R^2 : 0.6845731379708244
+# Exponential auto = {'range': 2275, 'sill': 43, 'nugget': 10e-10}
+# Mean Squared Error (MSE): 15.087493161204641 R^2 : 0.608216644408772
 
 # Exponential auto, increased nugget = {'range': 2275, 'sill': 43, 'nugget': 5}
 # Mean Squared Error (MSE): 14.618441232659178 R^2 : 0.7018142644963032
 
-# Exponential curve_fit auto = {'range': 1826.09, 'sill':46, 'nugget': 3}
-# Mean Squared Error (MSE): 14.440706870059156 R^2 : 0.680266329914254
+# Exponential curve_fit auto = {'range': 1826.09, 'sill':46, 'nugget': 10e-10}
+# Mean Squared Error (MSE): 14.979491503428692 R^2 : 0.6091258429544433
 
 # Exponential curve_fit auto increased nugget variogram_parameters = {'range': 1826.09, 'sill':46, 'nugget': 7}
 # Mean Squared Error (MSE): 14.59104036688992 R^2 : 0.7019221067014002
