@@ -51,7 +51,7 @@ y = OBS_XYZ_gdf['Z']
 # Define the model
 model = LinearRegression()
 
-# Define cross-validation strategy
+# Define cross-validation strategy; All models tested for = 42
 cv = KFold(n_splits=5, shuffle=True, random_state=42)
 
 # Define the parameter grid to search
@@ -86,8 +86,6 @@ from sklearn.tree import DecisionTreeRegressor
 # Define the model
 model = DecisionTreeRegressor(random_state=42)
 
-# Define cross-validation strategy
-cv = KFold(n_splits=5, shuffle=True, random_state=42)
 
 # Define the parameter grid to search
 param_grid = {
@@ -127,8 +125,6 @@ from sklearn.svm import SVR
 # Define the model
 model = SVR()
 
-# Define cross-validation strategy
-cv = KFold(n_splits=5, shuffle=True, random_state=42)
 
 # Define the parameter grid to search
 param_grid = {
@@ -172,8 +168,6 @@ import pandas as pd
 # Define the model
 model = KNeighborsRegressor()
 
-# Define cross-validation strategy
-cv = KFold(n_splits=5, shuffle=True, random_state=42)
 
 # Define the parameter grid to search
 param_grid = {

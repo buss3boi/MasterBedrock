@@ -22,7 +22,7 @@ y = OBS_XYZ_gdf['Z']
 # Define the model
 model = xgb.XGBRegressor(objective='reg:squarederror', random_state=42)
 
-# Define cross-validation strategy
+# Define cross-validation strategy; All models tested for = 42
 cv = KFold(n_splits=5, shuffle=True, random_state=42)
 
 # Define the parameter grid to search

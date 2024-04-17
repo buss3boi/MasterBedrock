@@ -316,7 +316,7 @@ plt.show()
 
 
 # Exp curve_fit auto: range: 1403.38   sill: 45.2   nugget: 1, maxlag=1
-# Exp model auto: range: 5661, sill: 50, nugget: 0
+# Exp model auto: range: 5661, sill: 50, nugget: 1.7570e-07
 range_param = 1400
 sill = 45
 nugget = 1
@@ -365,7 +365,7 @@ plt.show()
 
 #%% Manually rotated and scaled data
 
-# Exp model auto: range: 2573, sill: 50, nugget: 1
+# Exp model auto: range: 2573, sill: 50, nugget: 2.5333e-07 
 
 # Extracting x and y values from final_data. z values remains the same
 fx = final_data[:, 0]
@@ -484,7 +484,7 @@ plt.figure(figsize=(plot_size*proportion, plot_size))
 plt.scatter(x, y, c=z, cmap="viridis", marker="o", s=30, label="Borehole Data")
 plt.contourf(wxvec, wyvec, z_pred, levels=100, cmap="viridis", alpha=0.8)
 plt.colorbar(label="Interpolated Value")
-plt.title("Regular data Exponential kriging")
+plt.title("Standardscaled data Exponential kriging")
 plt.xlabel("X-coordinate")
 plt.ylabel("Y-coordinate")
 plt.legend(loc='upper left')

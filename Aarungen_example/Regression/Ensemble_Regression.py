@@ -24,7 +24,7 @@ y = OBS_XYZ_gdf['Z']
 # Define the model
 model = RandomForestRegressor(random_state=42)
 
-# Define cross-validation strategy
+# Define cross-validation strategy; All models tested for = 42
 cv = KFold(n_splits=5, shuffle=True, random_state=42)
 
 # Define the parameter grid to search
@@ -68,8 +68,6 @@ import pandas as pd
 # Define the model
 model = GradientBoostingRegressor(random_state=42)
 
-# Define cross-validation strategy
-cv = KFold(n_splits=5, shuffle=True, random_state=42)
 
 # Define the parameter grid to search
 param_grid = {

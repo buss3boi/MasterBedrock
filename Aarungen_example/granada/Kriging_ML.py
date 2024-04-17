@@ -94,6 +94,7 @@ def validate_kriging(model, variogram_parameters, X, y, wxvec, wyvec):
     minx, maxx, = X[:, 0].min(), X[:, 0].max()
     miny, maxy, = X[:, 1].min(), X[:, 1].max()
         
+    # K fold Cross validation, All models tested with = 42
     ss = KFold(n_splits=5, shuffle=True, random_state=42)
     for train_index, test_index in ss.split(X, y):
         X_train, X_test = X[train_index], X[test_index]
@@ -107,8 +108,8 @@ def validate_kriging(model, variogram_parameters, X, y, wxvec, wyvec):
             variogram_model=model,  # Adjust variogram model as needed
             verbose=False,
             variogram_parameters = variogram_parameters, # COMMENT OUT, if no params wanted, Note! With universal params, probably scores better
-            anisotropy_angle=-45,
-            anisotropy_scaling=1,
+            #anisotropy_angle=-45,
+            #anisotropy_scaling=1,
         )
         
         z_pred, ss = OK.execute('grid', wxvec, wyvec)
@@ -207,7 +208,6 @@ simple_model = validate_kriging('exponential', variogram_parameters, X, y, wxvec
 
 # Pykrige manual rotation auto = {'range': 5661, 'sill': 50, 'nugget': 1}
 # Mean Squared Error (MSE): 14.109764050732473 R^2 : 0.6244632682171374
-
 
 
 
