@@ -76,7 +76,8 @@ print("Linear regresssion Best Parameters: ", LR_grid.best_params_)
 print("Best MSE: ", -LR_grid.best_score_)
 print("Best R^2: ", LR_grid.cv_results_['mean_test_R^2'][LR_grid.best_index_])
 
-
+# Best MSE:  40.918151181428875
+# Best R^2:  0.05754795480744246
 
 #%% Decision tree (Its alright, Similar to kriging)
 

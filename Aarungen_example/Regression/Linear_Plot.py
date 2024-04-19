@@ -54,7 +54,7 @@ ax.set_title('Predicted Surface from Linear Regression')
 fig.colorbar(surf, shrink=0.5, aspect=5)
 
 ax.view_init(elev=30, azim=-130)
-
+plt.savefig('linear_regression_pred_surface.png')
 plt.show()
 
 
@@ -87,6 +87,7 @@ ax.set_title('Predicted Surface from Decision Tree Regressor')
 fig.colorbar(surf, shrink=0.5, aspect=5)
 
 ax.view_init(elev=30, azim=-70)
+plt.savefig('decision_tree_pred_surface.png')
 
 plt.show()
 
@@ -126,6 +127,7 @@ ax.set_title('Predicted Surface from Support Vector Regressor')
 fig.colorbar(surf, shrink=0.5, aspect=5)
 
 ax.view_init(azim=-120)
+plt.savefig('SVR_pred_surface.png')
 
 plt.show()
 

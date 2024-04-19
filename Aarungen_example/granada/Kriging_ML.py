@@ -152,8 +152,8 @@ def validate_kriging(model, variogram_parameters, X, y, wxvec, wyvec):
     print(f"K fold CV {OK.variogram_model} Model performance")
     print(f"Mean Squared Error (MSE): {np.median(mse_dict['Model'])} R^2 : {np.median(r2_dict['Model'])}")
 
-variogram_parameters = {'range': 2275, 'sill': 43, 'nugget': 5}
-simple_model = validate_kriging('exponential', variogram_parameters, X, y, wxvec, wyvec)  
+# variogram_parameters = {'range': 2275, 'sill': 43, 'nugget': 5}
+# simple_model = validate_kriging('exponential', variogram_parameters, X, y, wxvec, wyvec)  
 
 # variogram_parameters = {'range': 2573, 'sill': 50, 'nugget': 4}
 # iso_model = validate_kriging('exponential', variogram_parameters, final_data, y, fwxvec, fwyvec)  
@@ -161,20 +161,20 @@ simple_model = validate_kriging('exponential', variogram_parameters, X, y, wxvec
 
 #%% Standardscaled method
 
-# variogram_parameters = {'range': 2364.711, 'sill': 1.029, 'nugget': 13e-2}
-# from sklearn.preprocessing import StandardScaler
-# # Initialize the StandardScaler
-# scaler = StandardScaler()
+variogram_parameters = {'range': 2364.711, 'sill': 1.029, 'nugget': 13e-2}
+from sklearn.preprocessing import StandardScaler
+# Initialize the StandardScaler
+scaler = StandardScaler()
 
-# # Reshape z to a 2D array as StandardScaler expects a 2D array as input
-# y_2d = y.reshape(-1, 1)
+# Reshape z to a 2D array as StandardScaler expects a 2D array as input
+y_2d = y.reshape(-1, 1)
 
-# # Fit the scaler to the data and transform the data
-# y_standardized = scaler.fit_transform(y_2d)
+# Fit the scaler to the data and transform the data
+y_standardized = scaler.fit_transform(y_2d)
 
-# # Reshape the standardized data back to a 1D array
-# y_standardized = y_standardized.flatten()
-# SS_model = simple_model = validate_kriging('exponential', variogram_parameters, X, y_standardized, wxvec, wyvec)  
+# Reshape the standardized data back to a 1D array
+y_standardized = y_standardized.flatten()
+SS_model = simple_model = validate_kriging('exponential', variogram_parameters, X, y_standardized, wxvec, wyvec)  
 
 
 #%% Model results

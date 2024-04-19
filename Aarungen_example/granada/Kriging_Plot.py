@@ -241,7 +241,7 @@ plt.show()
 
 
 #%% Kriging pre-scaled data
-
+"""
 from Kriging_manual import fwxvec, fwyvec, final_data
 
 fx = final_data[:, 0]
@@ -287,5 +287,65 @@ fig.colorbar(surf, shrink=0.5, aspect=5)
 ax.view_init(elev=35, azim=-75)
 
 plt.savefig('kriging_pred_surface_prescaled_data.png')
+plt.show()
+"""
+
+#%% Kriging prediction surface stanardscaled data
+
+
+from sklearn.preprocessing import StandardScaler
+
+# Initialize the StandardScaler
+scaler = StandardScaler()
+
+# Reshape z to a 2D array as StandardScaler expects a 2D array as input
+z_2d = z.reshape(-1, 1)
+
+# Fit the scaler to the data and transform the data
+z_standardized = scaler.fit_transform(z_2d)
+
+# Reshape the standardized data back to a 1D array
+z_std = z_standardized.flatten()
+
+# Variogram with custom parameters
+variogram_parameters = {'range': 2364.711, 'sill': 1.029, 'nugget': 13e-2}
+
+
+# Create the kriging object
+OK = OrdinaryKriging(
+    x,
+    y,
+    z_std,
+    variogram_model='exponential',
+    verbose=True,
+    enable_plotting=True,
+    variogram_parameters=variogram_parameters
+)
+
+# Perform the kriging interpolation
+z_pred, ss = OK.execute('grid', wxvec, wyvec)
+
+# Assuming you have already calculated z_pred and created wxvec, wyvec
+
+# Create meshgrid from wxvec and wyvec
+wx, wy = np.meshgrid(wxvec, wyvec)
+
+# Plot the 3D surface
+fig = plt.figure(figsize=(10, 8))
+ax = fig.add_subplot(111, projection='3d')
+surf = ax.plot_surface(wx, wy, z_pred, cmap='viridis')
+
+# Add labels and title
+ax.set_xlabel('X')
+ax.set_ylabel('Y')
+ax.set_zlabel('Z (Predicted)')
+ax.set_title('Kriging Prediction Surface')
+
+# Add a color bar which maps values to colors
+fig.colorbar(surf, shrink=0.5, aspect=5)
+
+ax.view_init(elev=35, azim=-60)
+
+plt.savefig('kriging_pred_surface_standardscaled.png')
 plt.show()
 
