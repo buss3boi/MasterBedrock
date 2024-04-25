@@ -55,6 +55,7 @@ ax.set_title('Predicted Surface from Random Forest Regressor')
 fig.colorbar(surf, shrink=0.5, aspect=5)
 
 ax.view_init(elev=35, azim=-60)
+plt.savefig('random_forest_pred_surface.png')
 
 plt.show()
 
@@ -88,6 +89,7 @@ ax.set_title('Predicted Surface from Gradient Boosting Regressor')
 fig.colorbar(surf, shrink=0.5, aspect=5)
 
 ax.view_init(elev=35, azim=-60)
+plt.savefig('gradient_boosting_pred_surface.png')
 
 plt.show()
 
@@ -97,7 +99,7 @@ plt.show()
 import xgboost as xgb
 
 # Train an XGBoost regressor model
-xgb_reg = xgb.XGBRegressor(random_state=42, n_estimators=100, learning_rate=0.1)  # You can adjust the number of estimators and learning rate as needed
+xgb_reg = xgb.XGBRegressor(random_state=42, colsample_bytree=1.0, learning_rate=0.1, max_depth=7, n_estimators=100, subsample=0.6)  # You can adjust the number of estimators and learning rate as needed
 xgb_reg.fit(X, y)
 
 # Predict Z values for the meshgrid using the XGBoost regressor
@@ -121,6 +123,7 @@ ax.set_title('Predicted Surface from XGBoost Regressor')
 fig.colorbar(surf, shrink=0.5, aspect=5)
 
 ax.view_init(elev=35, azim=-60)
+plt.savefig('xgboost_pred_surface.png')
 
 plt.show()
 

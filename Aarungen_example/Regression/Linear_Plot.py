@@ -164,6 +164,7 @@ ax.set_title('Predicted Surface from K-Nearest Neighbors Regressor')
 fig.colorbar(surf, shrink=0.5, aspect=5)
 
 ax.view_init(elev=40, azim=-55)
+plt.savefig('KNN_pred_surface.png')
 # ax.view_init(elev=45, azim=-120)
 
 

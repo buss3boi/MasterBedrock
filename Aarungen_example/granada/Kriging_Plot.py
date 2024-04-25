@@ -63,6 +63,9 @@ OK = OrdinaryKriging(
 # Perform the kriging interpolation
 z_pred, ss = OK.execute('grid', wxvec, wyvec)
 
+vari = np.mean(abs(ss))
+print('Kriging Variance: {}'.format(vari))
+
 # Assuming you have already calculated z_pred and created wxvec, wyvec
 
 # Create meshgrid from wxvec and wyvec
@@ -85,6 +88,26 @@ fig.colorbar(surf, shrink=0.5, aspect=5)
 ax.view_init(elev=35, azim=-60)
 
 plt.savefig('kriging_pred_surface.png')
+plt.show()
+
+
+# Plot the 3D kriging residuals
+fig = plt.figure(figsize=(10, 8))
+ax = fig.add_subplot(111, projection='3d')
+surf = ax.plot_surface(wx, wy, ss, cmap='viridis')
+
+# Add labels and title
+ax.set_xlabel('X')
+ax.set_ylabel('Y')
+ax.set_zlabel('Z variance')
+ax.set_title('Kriging Variance Surface')
+
+# Add a color bar which maps values to colors
+fig.colorbar(surf, shrink=0.5, aspect=5)
+
+ax.view_init(elev=35, azim=-60)
+
+plt.savefig('kriging_var_surface.png')
 plt.show()
 
 
@@ -120,6 +143,9 @@ OK = OrdinaryKriging(
 # Perform the kriging interpolation
 z_pred, ss = OK.execute('grid', wxvec, wyvec)
 
+vari = np.mean(abs(ss))
+print('Kriging Variance skg: {}'.format(vari))
+
 # Assuming you have already calculated z_pred and created wxvec, wyvec
 
 # Create meshgrid from wxvec and wyvec
@@ -145,6 +171,29 @@ plt.savefig('kriging_pred_surface_skg.png')
 plt.show()
 
 
+# Plot the 3D kriging residuals
+fig = plt.figure(figsize=(10, 8))
+ax = fig.add_subplot(111, projection='3d')
+surf = ax.plot_surface(wx, wy, ss, cmap='viridis')
+
+# Add labels and title
+ax.set_xlabel('X')
+ax.set_ylabel('Y')
+ax.set_zlabel('Z variance')
+ax.set_title('Kriging Variance Surface')
+
+# Add a color bar which maps values to colors
+fig.colorbar(surf, shrink=0.5, aspect=5)
+
+ax.view_init(elev=35, azim=-60)
+
+plt.savefig('kriging_var_surface_skg.png')
+plt.show()
+
+
+
+
+
 #%% Kriging increased nugget prediction surface
 
 
@@ -165,6 +214,9 @@ OK = OrdinaryKriging(
 
 # Perform the kriging interpolation
 z_pred, ss = OK.execute('grid', wxvec, wyvec)
+
+vari = np.mean(abs(ss))
+print('Kriging Variance Inc Nug: {}'.format(vari))
 
 # Assuming you have already calculated z_pred and created wxvec, wyvec
 
@@ -191,6 +243,30 @@ plt.savefig('kriging_pred_surface_nug.png')
 plt.show()
 
 
+# Plot the 3D kriging residuals
+fig = plt.figure(figsize=(10, 8))
+ax = fig.add_subplot(111, projection='3d')
+surf = ax.plot_surface(wx, wy, ss, cmap='viridis')
+
+# Add labels and title
+ax.set_xlabel('X')
+ax.set_ylabel('Y')
+ax.set_zlabel('Z variance')
+ax.set_title('Kriging Variance Surface')
+
+# Add a color bar which maps values to colors
+fig.colorbar(surf, shrink=0.5, aspect=5)
+
+ax.view_init(elev=35, azim=-60)
+
+plt.savefig('kriging_var_surface_nug.png')
+plt.show()
+
+
+
+
+
+
 #%% Kriging pykrige scaled data
 
 
@@ -213,6 +289,9 @@ OK = OrdinaryKriging(
 
 # Perform the kriging interpolation
 z_pred, ss = OK.execute('grid', wxvec, wyvec)
+
+vari = np.mean(abs(ss))
+print('Kriging Variance pykrige scaled: {}'.format(vari))
 
 # Assuming you have already calculated z_pred and created wxvec, wyvec
 
@@ -239,9 +318,31 @@ plt.savefig('kriging_pred_surface_pykrige_scaled.png')
 plt.show()
 
 
+# Plot the 3D kriging residuals
+fig = plt.figure(figsize=(10, 8))
+ax = fig.add_subplot(111, projection='3d')
+surf = ax.plot_surface(wx, wy, ss, cmap='viridis')
+
+# Add labels and title
+ax.set_xlabel('X')
+ax.set_ylabel('Y')
+ax.set_zlabel('Z variance')
+ax.set_title('Kriging Variance Surface')
+
+# Add a color bar which maps values to colors
+fig.colorbar(surf, shrink=0.5, aspect=5)
+
+ax.view_init(elev=35, azim=-60)
+
+plt.savefig('kriging_var_surface_pykrige_scaled.png')
+plt.show()
+
+
+
+
 
 #%% Kriging pre-scaled data
-"""
+
 from Kriging_manual import fwxvec, fwyvec, final_data
 
 fx = final_data[:, 0]
@@ -264,6 +365,9 @@ OK = OrdinaryKriging(
 
 # Perform the kriging interpolation
 z_pred, ss = OK.execute('grid', fwxvec, fwyvec)
+
+vari = np.mean(abs(ss))
+print('Kriging Variance prescaled data: {}'.format(vari))
 
 # Assuming you have already calculated z_pred and created wxvec, wyvec
 
@@ -288,7 +392,28 @@ ax.view_init(elev=35, azim=-75)
 
 plt.savefig('kriging_pred_surface_prescaled_data.png')
 plt.show()
-"""
+
+
+# Plot the 3D kriging residuals
+fig = plt.figure(figsize=(10, 8))
+ax = fig.add_subplot(111, projection='3d')
+surf = ax.plot_surface(wx, wy, ss, cmap='viridis')
+
+# Add labels and title
+ax.set_xlabel('X')
+ax.set_ylabel('Y')
+ax.set_zlabel('Z variance')
+ax.set_title('Kriging Variance Surface')
+
+# Add a color bar which maps values to colors
+fig.colorbar(surf, shrink=0.5, aspect=5)
+
+ax.view_init(elev=35, azim=-60)
+
+plt.savefig('kriging_var_surface_prescaled_data.png')
+plt.show()
+
+
 
 #%% Kriging prediction surface stanardscaled data
 
@@ -325,6 +450,9 @@ OK = OrdinaryKriging(
 # Perform the kriging interpolation
 z_pred, ss = OK.execute('grid', wxvec, wyvec)
 
+vari = np.mean(abs(ss))
+print('Kriging Variance standardscaled: {}'.format(vari))
+
 # Assuming you have already calculated z_pred and created wxvec, wyvec
 
 # Create meshgrid from wxvec and wyvec
@@ -348,4 +476,28 @@ ax.view_init(elev=35, azim=-60)
 
 plt.savefig('kriging_pred_surface_standardscaled.png')
 plt.show()
+
+
+# Plot the 3D kriging residuals
+fig = plt.figure(figsize=(10, 8))
+ax = fig.add_subplot(111, projection='3d')
+surf = ax.plot_surface(wx, wy, ss, cmap='viridis')
+
+# Add labels and title
+ax.set_xlabel('X')
+ax.set_ylabel('Y')
+ax.set_zlabel('Z variance')
+ax.set_title('Kriging Variance Surface')
+
+# Add a color bar which maps values to colors
+fig.colorbar(surf, shrink=0.5, aspect=5)
+
+ax.view_init(elev=35, azim=-60)
+
+plt.savefig('kriging_var_surface_standardscaled.png')
+plt.show()
+
+
+
+
 

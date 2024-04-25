@@ -9,6 +9,7 @@ import xgboost as xgb
 from sklearn.model_selection import GridSearchCV, KFold
 from sklearn.metrics import make_scorer, mean_squared_error, r2_score
 import pandas as pd
+import numpy as np
 
 # Load your dataset
 OBS_XYZ_gdf = pd.read_csv("OBS_XYZ_gdf.csv")  # Assuming it's a CSV file
@@ -28,10 +29,10 @@ cv = KFold(n_splits=5, shuffle=True, random_state=42)
 # Define the parameter grid to search
 param_grid = {
     'n_estimators': [100, 200, 300],  # Number of boosting rounds
-    'learning_rate': [0.01, 0.1, 0.2],  # Learning rate
+    'learning_rate': [0.01, 0.1, 0.5],  # Learning rate
     'max_depth': [3, 5, 7],  # Maximum depth of a tree
-    'subsample': [0.6, 0.8, 1.0],  # Subsample ratio of the training instances
-    'colsample_bytree': [0.6, 0.8, 1.0],  # Subsample ratio of columns when constructing each tree
+    'subsample': [0.6, 0.8, 1.0]  # Subsample ratio of the training instances
+    #'colsample_bytree': [0.6, 0.8, 1.0],  # Subsample ratio of columns when constructing each tree
 }
 
 # Define scoring methods (MSE and R^2)
@@ -54,3 +55,25 @@ print("Best R^2: ", grid_search.cv_results_['mean_test_R^2'][grid_search.best_in
 # Best Parameters:  {'colsample_bytree': 1.0, 'learning_rate': 0.1, 'max_depth': 7, 'n_estimators': 100, 'subsample': 0.6}
 # Best MSE:  13.989654423576749
 # Best R^2:  0.673507072853172
+
+
+# # evaluate model ext example
+
+# from extended_cv import evaluate_model_ext_cv
+
+
+# # Example usage with your XGBoost setup:
+# model_type = xgb.XGBRegressor(objective='reg:squarederror', random_state=42)
+# param_grid = {
+#     'n_estimators': [100, 200, 300],
+#     'learning_rate': [0.01, 0.1, 0.5], 
+#     'max_depth': [3, 5, 7], 
+#     'subsample': [0.6, 0.8, 1.0] 
+# }
+
+# random_states = [12, 22, 32, 42, 52]
+
+# mse_values, r2_values, opt_params = evaluate_model_ext_cv(model_type, param_grid, random_states, X, y)
+
+
+

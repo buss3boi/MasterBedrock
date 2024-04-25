@@ -130,8 +130,9 @@ model = SVR()
 # Define the parameter grid to search
 param_grid = {
     'kernel': ['rbf'], # rbf is the default. Same results as sigmoid, poly 
-    'C': [0.1, 1, 10, 100],  # Regularization parameter
-    'gamma': ['scale', 'auto']  # Kernel coefficient for 'rbf', 'poly', 'sigmoid'
+    'C': [0.1, 1, 10, 100, 1000],  # Regularization parameter
+    'gamma': ['scale', 'auto'],  # Kernel coefficient for 'rbf', 'poly', 'sigmoid'
+    'epsilon': [0.1, 0.2, 0.5, 0.8]
 }
 
 # Define scoring methods (MSE and R^2)

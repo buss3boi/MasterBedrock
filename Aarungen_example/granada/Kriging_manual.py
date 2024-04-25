@@ -291,8 +291,8 @@ z_pred, ss = OK.execute('grid', wxvec, wyvec)
 
 # We use RMSE of the kriging errors as a quick measure as we belive it is a 
 # semi- accurate method
-RMSE = np.sqrt(np.mean(ss**2))
-print(RMSE)
+MSE = np.mean(abs(ss))
+print(MSE)
 
 proportion = len(wxvec)/len(wyvec)
 plot_size = 8
