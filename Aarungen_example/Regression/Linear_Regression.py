@@ -118,6 +118,27 @@ print("Best R^2: ", DT_grid.cv_results_['mean_test_R^2'][DT_grid.best_index_])
 # Best R^2:  0.49626812770307877
 
 
+from extended_cv import evaluate_model_ext_cv
+
+
+# Example usage with your XGBoost setup:
+model_type = DecisionTreeRegressor(random_state=42)
+param_grid = {
+    'max_depth': [None, 10, 20, 30],  # Max depth of the tree
+    'min_samples_split': [2, 5, 10],   # Minimum number of samples required to split an internal node
+    'min_samples_leaf': [1, 2, 4]      # Minimum number of samples required to be at a leaf node
+}
+random_states = [12, 22, 32, 42, 52]
+
+mse_values, r2_values, opt_params = evaluate_model_ext_cv(model_type, param_grid, random_states, X, y)
+
+
+# MSE Values: [23.664504273280244, 21.98871873875257, 26.74764377799071, 21.770629230031705, 21.152695468390768]
+# R^2 Values: [0.45085368107826707, 0.48231421833316757, 0.3865304097243848, 0.49626812770307877, 0.5126538010058195]
+# Mean R^2: 0.46572404756894353
+# Median R^2: 0.48231421833316757
+# Standard Deviation of R^2: 0.044504688358631875
+
 #%% Support Vector Machine (This shit takes too long)
 
 from sklearn.svm import SVR
@@ -132,7 +153,7 @@ param_grid = {
     'kernel': ['rbf'], # rbf is the default. Same results as sigmoid, poly 
     'C': [0.1, 1, 10, 100, 1000],  # Regularization parameter
     'gamma': ['scale', 'auto'],  # Kernel coefficient for 'rbf', 'poly', 'sigmoid'
-    'epsilon': [0.1, 0.2, 0.5, 0.8]
+    #'epsilon': [0.1, 0.2, 0.5, 0.8]
 }
 
 # Define scoring methods (MSE and R^2)
@@ -156,6 +177,7 @@ print("Best R^2: ", SVR_grid.cv_results_['mean_test_R^2'][SVR_grid.best_index_])
 # SVM Best Parameters:  {'C': 100, 'gamma': 'auto', 'kernel': 'rbf'}
 # Best MSE:  43.26780481360569
 # Best R^2:  -0.002868315409111455
+
 
 
 #%% KNN (Best model so far)
@@ -199,3 +221,21 @@ print("Best R^2: ", KNN_grid.cv_results_['mean_test_R^2'][KNN_grid.best_index_])
 # KNN Best Parameters:  {'n_neighbors': 3, 'p': 1, 'weights': 'distance'}
 # Best MSE:  13.285184935092152
 # Best R^2:  0.6883849064218859
+
+
+# Example usage with your XGBoost setup:
+model_type = KNeighborsRegressor()
+param_grid = {
+    'n_neighbors': [2, 3, 4, 5, 7],  # Number of neighbors to use
+    'weights': ['uniform', 'distance'],  # Weight function used in prediction
+    'p': [1, 2]  # Power parameter for the Minkowski metric (1 for Manhattan distance, 2 for Euclidean distance)
+}
+random_states = [12, 22, 32, 42, 52]
+
+mse_values, r2_values, opt_params = evaluate_model_ext_cv(model_type, param_grid, random_states, X, y)
+
+# MSE Values: [13.748796204023009, 15.348148164041527, 14.264764217510086, 13.285184935092152, 14.112996428903916]
+# R^2 Values: [0.6751077029181405, 0.6246222986738873, 0.6656851337239311, 0.6883849064218859, 0.6732094535261945]
+# Mean R^2: 0.6654018990528078
+# Median R^2: 0.6732094535261945
+# Standard Deviation of R^2: 0.021663033915856226

@@ -73,8 +73,14 @@ param_grid = {
 
 random_states = [12, 22, 32, 42, 52]
 
-mse_values, r2_values, opt_params = evaluate_model_ext_cv(model_type, param_grid, random_states, X, y)
+# mse_values, r2_values, opt_params = evaluate_model_ext_cv(model_type, param_grid, random_states, X, y)
 
+
+# MSE Values: [16.122424334667095, 16.64564061648452, 17.55760725286112, 15.631883574082952, 15.614049805147374]
+# R^2 Values: [0.622116397282514, 0.6055199804203806, 0.5926394877435796, 0.6376508315034493, 0.6467294653807188]
+# Mean R^2: 0.6209312324661285
+# Median R^2: 0.622116397282514
+# Standard Deviation of R^2: 0.01992198754235969
 
 """
 #%% Gradient Boosting
@@ -128,3 +134,10 @@ param_grid = {
 random_states = [12, 22, 32, 42, 52]
 
 mse_values, r2_values, opt_params = evaluate_model_ext_cv(model_type, param_grid, random_states, X, y)
+
+
+# MSE Values: [16.847558359856045, 17.197485666403463, 18.19847110915042, 15.827176067644263, 16.39622302816702]
+# R^2 Values: [0.6082732616167114, 0.5972652362504894, 0.5728504516117775, 0.6363950580695261, 0.6329642971323307]
+# Mean R^2: 0.6095496609361669
+# Median R^2: 0.6082732616167114
+# Standard Deviation of R^2: 0.023529933215215952

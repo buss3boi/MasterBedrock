@@ -47,17 +47,17 @@ def evaluate_model_ext_cv(model_type, param_grid, random_states, X, y):
         mse_values.append(-grid_search.best_score_)  # Using negative MSE
         r2_values.append(grid_search.cv_results_['mean_test_R^2'][grid_search.best_index_])  # Standard R^2
         
-        print("MSE Values:", mse_values)
-        print("R^2 Values:", r2_values)
+    print("MSE Values:", mse_values)
+    print("R^2 Values:", r2_values)
 
-        # Additional metrics
-        mean_r2 = np.mean(r2_values)
-        median_r2 = np.median(r2_values)
-        std_r2 = np.std(r2_values)
+    # Additional metrics
+    mean_r2 = np.mean(r2_values)
+    median_r2 = np.median(r2_values)
+    std_r2 = np.std(r2_values)
 
-        # Print the results
-        print("Mean R^2:", mean_r2)
-        print("Median R^2:", median_r2)
-        print("Standard Deviation of R^2:", std_r2)
+    # Print the results
+    print("Mean R^2:", mean_r2)
+    print("Median R^2:", median_r2)
+    print("Standard Deviation of R^2:", std_r2)
 
     return mse_values, r2_values, opt_params
