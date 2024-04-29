@@ -48,6 +48,7 @@ y = OBS_XYZ_gdf['blengdber_'].values
 
 mse_dict = {'Mean':[], 'Median':[], 'Model':[]}
 r2_dict = {'Mean':[], 'Median':[], 'Model':[]}
+
 random_states = range(42, 52)
 
 def calc_random_state(random_states):
@@ -94,8 +95,8 @@ def validate_kriging(model, variogram_parameters, X, y, wxvec, wyvec):
     minx, maxx, = X[:, 0].min(), X[:, 0].max()
     miny, maxy, = X[:, 1].min(), X[:, 1].max()
         
-    # K fold Cross validation, All models tested with = 42
-    ss = KFold(n_splits=5, shuffle=True, random_state=42)
+    # K fold Cross validation, Default = 42
+    ss = KFold(n_splits=5, shuffle=True, random_state=12)
     for train_index, test_index in ss.split(X, y):
         X_train, X_test = X[train_index], X[test_index]
         y_train, y_test = y[train_index], y[test_index]
@@ -108,8 +109,8 @@ def validate_kriging(model, variogram_parameters, X, y, wxvec, wyvec):
             variogram_model=model,  # Adjust variogram model as needed
             verbose=False,
             variogram_parameters = variogram_parameters, # COMMENT OUT, if no params wanted, Note! With universal params, probably scores better
-            #anisotropy_angle=-45,
-            #anisotropy_scaling=1,
+            # anisotropy_angle=-45,
+            # anisotropy_scaling=2.2,
         )
         
         z_pred, ss = OK.execute('grid', wxvec, wyvec)
@@ -143,41 +144,36 @@ def validate_kriging(model, variogram_parameters, X, y, wxvec, wyvec):
         mse_dict['Model'].append(mse)
         r2_dict['Model'].append(r2)
 
-    print("K fold CV Mean performance")
-    print(f"Mean Squared Error (MSE): {np.median(mse_dict['Mean'])} R^2 : {np.median(r2_dict['Mean'])}")
-        
-    print("K fold CV Median performance")
-    print(f"Mean Squared Error (MSE): {np.median(mse_dict['Median'])} R^2 : {np.median(r2_dict['Median'])}")
-        
     print(f"K fold CV {OK.variogram_model} Model performance")
-    print(f"Mean Squared Error (MSE): {np.median(mse_dict['Model'])} R^2 : {np.median(r2_dict['Model'])}")
+    print(f"Mean Squared Error (MSE): {np.mean(mse_dict['Model'])} R^2 mean: {np.mean(r2_dict['Model'])}") #R^2 median: {np.median(r2_dict['Model'])}
 
 # variogram_parameters = {'range': 2275, 'sill': 43, 'nugget': 5}
 # simple_model = validate_kriging('exponential', variogram_parameters, X, y, wxvec, wyvec)  
 
-# variogram_parameters = {'range': 2573, 'sill': 50, 'nugget': 4}
+# variogram_parameters = {'range': 2573, 'sill': 50, 'nugget': 3}
 # iso_model = validate_kriging('exponential', variogram_parameters, final_data, y, fwxvec, fwyvec)  
 
 
 #%% Standardscaled method
 
-variogram_parameters = {'range': 2364.711, 'sill': 1.029, 'nugget': 13e-2}
-from sklearn.preprocessing import StandardScaler
-# Initialize the StandardScaler
-scaler = StandardScaler()
+# from sklearn.preprocessing import StandardScaler
+# # Initialize the StandardScaler
+# scaler = StandardScaler()
 
-# Reshape z to a 2D array as StandardScaler expects a 2D array as input
-y_2d = y.reshape(-1, 1)
+# # Reshape z to a 2D array as StandardScaler expects a 2D array as input
+# y_2d = y.reshape(-1, 1)
 
-# Fit the scaler to the data and transform the data
-y_standardized = scaler.fit_transform(y_2d)
+# # Fit the scaler to the data and transform the data
+# y_standardized = scaler.fit_transform(y_2d)
 
-# Reshape the standardized data back to a 1D array
-y_standardized = y_standardized.flatten()
-SS_model = simple_model = validate_kriging('exponential', variogram_parameters, X, y_standardized, wxvec, wyvec)  
+# # Reshape the standardized data back to a 1D array
+# y_standardized = y_standardized.flatten()
+
+# variogram_parameters = {'range': 2364.711, 'sill': 1.029, 'nugget': 14e-2}
+# SS_model = validate_kriging('exponential', variogram_parameters, X, y_standardized, wxvec, wyvec)  
 
 
-#%% Model results
+#%% Model results, all with Kfold cross validation random state 42
 
 ### Results no set max values. Dataset decides bounds. A more fair way to decide since our
 # machine learning algorithms uses this method
@@ -192,11 +188,8 @@ SS_model = simple_model = validate_kriging('exponential', variogram_parameters, 
 # Exponential curve_fit auto = {'range': 1826.09, 'sill':46, 'nugget': 10e-10}
 # Mean Squared Error (MSE): 14.979491503428692 R^2 : 0.6091258429544433
 
-# Exponential curve_fit auto increased nugget variogram_parameters = {'range': 1826.09, 'sill':46, 'nugget': 7}
+# Exponential curve_fit auto increased nugget = {'range': 1826.09, 'sill':46, 'nugget': 7}
 # Mean Squared Error (MSE): 14.59104036688992 R^2 : 0.7019221067014002
-
-# Gaussian auto = {'range': 1841, 'sill': 42.7, 'nugget': 3}
-# Mean Squared Error (MSE): 19.282778547339188 R^2 : 0.5935331608773511
 
 
 
@@ -208,9 +201,6 @@ SS_model = simple_model = validate_kriging('exponential', variogram_parameters, 
 
 # Pykrige manual rotation auto = {'range': 5661, 'sill': 50, 'nugget': 1}
 # Mean Squared Error (MSE): 14.109764050732473 R^2 : 0.6244632682171374
-
-
-
 
 
 
@@ -235,3 +225,131 @@ SS_model = simple_model = validate_kriging('exponential', variogram_parameters, 
 
 # Exponential auto increased nugget = {'range': 2364.711, 'sill': 1.029, 'nugget': 13e-2}
 # Mean Squared Error (MSE): 0.3376857242191685 R^2 : 0.7029630086626447
+
+
+
+
+#%% Second round CV, MEAN scoring
+
+
+### PYRKIGE VARIOGRAM MODEL FIT OPTIMIZED
+
+
+# RS 12
+# {'range': 2275, 'sill': 43, 'nugget': 6}
+# Mean Squared Error (MSE): 15.055761482302866 R^2 mean: 0.6463677817126289
+
+# RS 22
+# {'range': 2275, 'sill': 43, 'nugget': 5}
+# Mean Squared Error (MSE): 16.101002010790342 R^2 mean: 0.6134391315569138
+
+# RS 32
+# {'range': 2275, 'sill': 43, 'nugget': 4}
+# Mean Squared Error (MSE): 16.009277885627675 R^2 mean: 0.6224618807498589
+
+# RS 42 
+# {'range': 2275, 'sill': 43, 'nugget': 5}
+# Mean Squared Error (MSE): 14.618441232659178 R^2 mean: 0.6656185169392576
+
+# RS 52
+# {'range': 2275, 'sill': 43, 'nugget': 5}
+# Mean Squared Error (MSE): 15.242011059369748 R^2 mean: 0.6483774185380591
+
+
+
+
+### Pykrige isotropic
+
+# RS 12
+# {'range': 5661, 'sill': 50, 'nugget': 5}
+# Mean Squared Error (MSE): 16.013184513803637 R^2 mean: 0.6226395265578165
+
+# RS 22
+# {'range': 5661, 'sill': 50, 'nugget': 3}
+# Mean Squared Error (MSE): 17.417683892032066 R^2 mean: 0.5796566743996576
+
+# RS 32
+# {'range': 5661, 'sill': 50, 'nugget': 3}
+# Mean Squared Error (MSE): 17.292004090040944 R^2 mean: 0.5944194085627814
+
+# RS 42 
+# {'range': 5661, 'sill': 50, 'nugget': 1}
+# Mean Squared Error (MSE): 14.109764050732473 R^2 mean: 0.6342694511254617
+
+# RS 52
+# {'range': 5661, 'sill': 50, 'nugget': 4}
+# Mean Squared Error (MSE): 16.12796355644821 R^2 mean: 0.6278383878932752
+
+
+
+### Pre-scaled isotropic
+
+# RS 12
+# {'range': 2573, 'sill': 50, 'nugget': 3}
+# Mean Squared Error (MSE): 15.0355902331128 R^2 mean: 0.6493209119921926
+
+# RS 22
+# {'range': 2573, 'sill': 50, 'nugget': 3}
+# Mean Squared Error (MSE): 16.24124858963457 R^2 mean: 0.6059368352642698
+
+# RS 32
+# {'range': 2573, 'sill': 50, 'nugget': 3}
+# Mean Squared Error (MSE): 16.160319831410003 R^2 mean: 0.6202489146647071
+
+# RS 42 
+# {'range': 2573, 'sill': 50, 'nugget': 3}
+# Mean Squared Error (MSE): 14.3723671864031 R^2 mean: 0.6645392754250128
+
+# RS 52
+# {'range': 2573, 'sill': 50, 'nugget': 3}
+# Mean Squared Error (MSE): 14.83964566964361 R^2 mean: 0.6567664044405653
+
+
+
+### Standardscaled Z
+
+# RS 12
+# {'range': 2364.711, 'sill': 1.029, 'nugget': 14e-2}
+# Mean Squared Error (MSE): 0.34672023787682543 R^2 mean: 0.646258875299477
+
+# RS 22
+# {'range': 2364.711, 'sill': 1.029, 'nugget': 11e-2}
+# Mean Squared Error (MSE): 0.37068424484222096 R^2 mean: 0.6133275730168615
+
+# RS 32
+# {'range': 2364.711, 'sill': 1.029, 'nugget': 10e-2}
+# Mean Squared Error (MSE): 0.3687930007823986 R^2 mean: 0.622252299168724
+
+# RS 42 
+# {'range': 2364.711, 'sill': 1.029, 'nugget': 11e-2}
+# Mean Squared Error (MSE): 0.33064467843377776 R^2 mean: 0.6657038921068728
+
+# RS 52
+# {'range': 2364.711, 'sill': 1.029, 'nugget': 12e-2}
+# Mean Squared Error (MSE): 0.351123409053832 R^2 mean: 0.6481926405526076
+
+
+
+r2_results = {
+    "pykrige_variogram_r2": [0.6463677817126289, 0.6134391315569138, 0.6224618807498589, 0.6656185169392576, 0.6483774185380591],
+    "pykrige_isotropic_r2": [0.6226395265578165, 0.5796566743996576, 0.5944194085627814, 0.6342694511254617, 0.6278383878932752],
+    "pre_scaled_isotropic_r2": [0.6493209119921926, 0.6059368352642698, 0.6202489146647071, 0.6645392754250128, 0.6567664044405653],
+    "standardscaled_z_r2": [0.646258875299477, 0.6133275730168615, 0.622252299168724, 0.6657038921068728, 0.6481926405526076]
+}
+
+
+import numpy as np
+
+for model_name, r2_values in r2_results.items():
+    median = np.median(r2_values)
+    mean = np.mean(r2_values)
+    std = np.std(r2_values)
+
+    print(f"Model: {model_name}")
+    print(f"Median R-squared: {median}")
+    print(f"Mean R-squared: {mean}")
+    print(f"Standard Deviation of R-squared: {std}\n")
+
+
+
+
