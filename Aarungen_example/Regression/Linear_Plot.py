@@ -102,7 +102,7 @@ scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X)
 
 # Train an SVR model
-svr = SVR(kernel='rbf', C=100, gamma='auto')
+svr = SVR(kernel='rbf', C=10000, gamma='auto')
 svr.fit(X_scaled, y)
 
 # Predict Z values for the meshgrid using the SVR model

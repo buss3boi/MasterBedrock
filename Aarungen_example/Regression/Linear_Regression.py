@@ -130,7 +130,7 @@ param_grid = {
 }
 random_states = [12, 22, 32, 42, 52]
 
-mse_values, r2_values, opt_params = evaluate_model_ext_cv(model_type, param_grid, random_states, X, y)
+#mse_values, r2_values, opt_params = evaluate_model_ext_cv(model_type, param_grid, random_states, X, y)
 
 
 # MSE Values: [23.664504273280244, 21.98871873875257, 26.74764377799071, 21.770629230031705, 21.152695468390768]
@@ -141,18 +141,28 @@ mse_values, r2_values, opt_params = evaluate_model_ext_cv(model_type, param_grid
 
 #%% Support Vector Machine (This shit takes too long)
 
-from sklearn.svm import SVR
 
+from sklearn.svm import SVR
+from sklearn.preprocessing import StandardScaler
 
 # Define the model
 model = SVR()
 
+from sklearn.pipeline import Pipeline
+
+steps = [
+    ('scaler', StandardScaler()),
+    ('svr', SVR())
+]
+
+pipeline = Pipeline(steps)
+
 
 # Define the parameter grid to search
 param_grid = {
-    'kernel': ['rbf'], # rbf is the default. Same results as sigmoid, poly 
-    'C': [0.1, 1, 10, 100, 1000],  # Regularization parameter
-    'gamma': ['scale', 'auto'],  # Kernel coefficient for 'rbf', 'poly', 'sigmoid'
+    'svr__kernel': ['rbf'], # rbf is the default. Same results as sigmoid, poly 
+    'svr__C': [0.1, 1, 10, 100, 1000, 10000],  # Regularization parameter
+    'svr__gamma': ['scale', 'auto'],  # Kernel coefficient for 'rbf', 'poly', 'sigmoid'
     #'epsilon': [0.1, 0.2, 0.5, 0.8]
 }
 
@@ -163,7 +173,7 @@ scoring = {
 }
 
 # Set up grid search
-SVR_grid = GridSearchCV(estimator=model, param_grid=param_grid, scoring=scoring, cv=cv, refit='MSE')
+SVR_grid = GridSearchCV(estimator=pipeline, param_grid=param_grid, scoring=scoring, cv=cv, refit='MSE')
 
 # Perform grid search
 SVR_grid.fit(X, y)
@@ -174,9 +184,10 @@ print("Best MSE: ", -SVR_grid.best_score_)  # Negate the score to get MSE
 print("Best R^2: ", SVR_grid.cv_results_['mean_test_R^2'][SVR_grid.best_index_])
 
 
-# SVM Best Parameters:  {'C': 100, 'gamma': 'auto', 'kernel': 'rbf'}
-# Best MSE:  43.26780481360569
-# Best R^2:  -0.002868315409111455
+# SVR Best Parameters:  {'svr__C': 10000, 'svr__gamma': 'scale', 'svr__kernel': 'rbf'}
+# Best MSE:  40.575752063440376
+# Best R^2:  0.07339093464248156
+
 
 
 
@@ -232,7 +243,7 @@ param_grid = {
 }
 random_states = [12, 22, 32, 42, 52]
 
-mse_values, r2_values, opt_params = evaluate_model_ext_cv(model_type, param_grid, random_states, X, y)
+# mse_values, r2_values, opt_params = evaluate_model_ext_cv(model_type, param_grid, random_states, X, y)
 
 # MSE Values: [13.748796204023009, 15.348148164041527, 14.264764217510086, 13.285184935092152, 14.112996428903916]
 # R^2 Values: [0.6751077029181405, 0.6246222986738873, 0.6656851337239311, 0.6883849064218859, 0.6732094535261945]
