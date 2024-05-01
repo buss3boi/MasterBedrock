@@ -13,6 +13,7 @@ import rasterio
 import pandas as pd
 from rasterio.plot import show
 import matplotlib.pyplot as plt
+import numpy as np
 
 src = rasterio.open('6602_2_10m_z33.dem')
 dataset = src.read()
@@ -43,5 +44,29 @@ fig.colorbar(im,fraction=0.029, pad=0.04)
 plt.title('Digital Elevation Model')
 plt.savefig('Digital_Elevation_Model.png',  dpi=300, bbox_inches='tight')
 
+window_ul_x, window_ul_y = window.col_off, window.row_off
+window_lr_x = window_ul_x + window.width
+window_lr_y = window_ul_y + window.height
 
+# Apply geotransform to get real-world coordinates of the window corners
+ul_x, ul_y = geotransform * (window_ul_x, window_ul_y)  # Upper left
+lr_x, lr_y = geotransform * (window_lr_x, window_lr_y)  # Lower right
+
+# Print the X and Y coordinates (optional)
+print(f"Upper Left  (X, Y): ({ul_x:.2f}, {ul_y:.2f})")
+print(f"Lower Right (X, Y): ({lr_x:.2f}, {lr_y:.2f})") 
+
+window_width = int(window.width)
+window_height = int(window.height)
+x_coords = np.linspace(wminx, wmaxx-10, window_width)
+
+# Coordinates along the y-direction (note: reversed due to image indexing)
+y_coords = np.linspace(wmaxy, wminy+10, window_height)
+
+# Create DataFrame with coordinates as index and columns
+df = pd.DataFrame(subset, index=y_coords, columns=x_coords)
+
+
+# Save the DataFrame as a CSV file
+df.to_csv('DEM_subset.csv', index=False) 
 
