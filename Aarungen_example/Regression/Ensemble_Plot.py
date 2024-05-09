@@ -19,6 +19,10 @@ OBS_XYZ_gdf = pd.read_csv("OBS_XYZ_gdf.csv")  # Assuming it's a CSV file
 X = OBS_XYZ_gdf[['X', 'Y']]
 y = OBS_XYZ_gdf['Z']
 
+data_x = OBS_XYZ_gdf['X']
+data_y = OBS_XYZ_gdf['Y']
+data_z = OBS_XYZ_gdf['Z']
+
 # Generate a meshgrid of X and Y values
 x_min, x_max = X['X'].min(), X['X'].max()
 y_min, y_max = X['Y'].min(), X['Y'].max()
@@ -45,6 +49,10 @@ ax = fig.add_subplot(111, projection='3d')
 # Plot the surface of the predicted plane
 surf = ax.plot_surface(X_mesh, Y_mesh, Z_mesh_rf, cmap='viridis', edgecolor='none')
 
+# Plot the original data points
+ax.scatter(data_x, data_y, data_z, color='red', marker='o', s=10) 
+
+
 # Set labels and title
 ax.set_xlabel('X')
 ax.set_ylabel('Y')
@@ -55,7 +63,7 @@ ax.set_title('Predicted Surface from Random Forest Regressor')
 fig.colorbar(surf, shrink=0.5, aspect=5)
 
 ax.view_init(elev=35, azim=-60)
-plt.savefig('random_forest_pred_surface.png')
+plt.savefig('random_forest_pred_surface_points.png')
 
 plt.show()
 
@@ -79,6 +87,9 @@ ax = fig.add_subplot(111, projection='3d')
 # Plot the surface of the predicted plane
 surf = ax.plot_surface(X_mesh, Y_mesh, Z_mesh_gb, cmap='viridis', edgecolor='none')
 
+# Plot the original data points
+ax.scatter(data_x, data_y, data_z, color='red', marker='o', s=10) 
+
 # Set labels and title
 ax.set_xlabel('X')
 ax.set_ylabel('Y')
@@ -89,7 +100,7 @@ ax.set_title('Predicted Surface from Gradient Boosting Regressor')
 fig.colorbar(surf, shrink=0.5, aspect=5)
 
 ax.view_init(elev=35, azim=-60)
-plt.savefig('gradient_boosting_pred_surface.png')
+plt.savefig('gradient_boosting_pred_surface_points.png')
 
 plt.show()
 
@@ -113,6 +124,9 @@ ax = fig.add_subplot(111, projection='3d')
 # Plot the surface of the predicted plane
 surf = ax.plot_surface(X_mesh, Y_mesh, Z_mesh_xgb, cmap='viridis', edgecolor='none')
 
+# Plot the original data points
+ax.scatter(data_x, data_y, data_z, color='red', marker='o', s=10) 
+
 # Set labels and title
 ax.set_xlabel('X')
 ax.set_ylabel('Y')
@@ -123,7 +137,43 @@ ax.set_title('Predicted Surface from XGBoost Regressor')
 fig.colorbar(surf, shrink=0.5, aspect=5)
 
 ax.view_init(elev=35, azim=-60)
-plt.savefig('xgboost_pred_surface.png')
+plt.savefig('xgboost_pred_surface_points.png')
+
+plt.show()
+
+
+
+#%% XGBoost absolute surface
+
+
+averaged_df = pd.read_csv("dem_convoluted.csv")  # Assuming it's a CSV file
+
+DEM_convolution = averaged_df.to_numpy(dtype='float', na_value=np.nan) 
+
+
+
+Z_xgb_absolute = DEM_convolution - Z_mesh_xgb
+
+# Plot the surface
+fig = plt.figure(figsize=(10, 8))
+ax = fig.add_subplot(111, projection='3d')
+
+# Plot the surface of the predicted plane
+surf = ax.plot_surface(X_mesh, Y_mesh, Z_xgb_absolute, cmap='viridis', edgecolor='none')
+
+# Set labels and title
+ax.set_xlabel('X')
+ax.set_ylabel('Y')
+ax.set_zlabel('Z (Predicted)')
+ax.set_title('XGBoost absolute pred surface')
+
+# Add color bar
+fig.colorbar(surf, shrink=0.5, aspect=5)
+
+ax.view_init(elev=40, azim=-55)
+plt.savefig('XGBoost_abs_pred_surface.png')
+# ax.view_init(elev=45, azim=-120)
+
 
 plt.show()
 

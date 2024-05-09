@@ -282,6 +282,7 @@ OK = OrdinaryKriging(
     variogram_model='exponential',
     verbose=True,
     enable_plotting=True,
+    coordinates_type='geographic'
     #variogram_parameters=variogram_parameters
 )
 
@@ -335,6 +336,7 @@ OK = OrdinaryKriging(
     enable_plotting=True,
     anisotropy_angle=-rotation_angle,
     anisotropy_scaling=scaling_factor,
+    coordinates_type='geographic',
     #variogram_parameters=variogram_parameters
 )
 

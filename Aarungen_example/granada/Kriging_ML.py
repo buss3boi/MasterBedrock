@@ -96,7 +96,7 @@ def validate_kriging(model, variogram_parameters, X, y, wxvec, wyvec):
     miny, maxy, = X[:, 1].min(), X[:, 1].max()
         
     # K fold Cross validation, Default = 42
-    ss = KFold(n_splits=5, shuffle=True, random_state=12)
+    ss = KFold(n_splits=5, shuffle=True, random_state=42)
     for train_index, test_index in ss.split(X, y):
         X_train, X_test = X[train_index], X[test_index]
         y_train, y_test = y[train_index], y[test_index]
@@ -109,8 +109,8 @@ def validate_kriging(model, variogram_parameters, X, y, wxvec, wyvec):
             variogram_model=model,  # Adjust variogram model as needed
             verbose=False,
             variogram_parameters = variogram_parameters, # COMMENT OUT, if no params wanted, Note! With universal params, probably scores better
-            # anisotropy_angle=-45,
-            # anisotropy_scaling=2.2,
+            anisotropy_angle=-45,
+            anisotropy_scaling=2.2,
         )
         
         z_pred, ss = OK.execute('grid', wxvec, wyvec)
@@ -147,8 +147,8 @@ def validate_kriging(model, variogram_parameters, X, y, wxvec, wyvec):
     print(f"K fold CV {OK.variogram_model} Model performance")
     print(f"Mean Squared Error (MSE): {np.mean(mse_dict['Model'])} R^2 mean: {np.mean(r2_dict['Model'])}") #R^2 median: {np.median(r2_dict['Model'])}
 
-# variogram_parameters = {'range': 2275, 'sill': 43, 'nugget': 5}
-# simple_model = validate_kriging('exponential', variogram_parameters, X, y, wxvec, wyvec)  
+variogram_parameters = {'range': 2275, 'sill': 43, 'nugget': 5}
+simple_model = validate_kriging('exponential', variogram_parameters, X, y, wxvec, wyvec)  
 
 # variogram_parameters = {'range': 2573, 'sill': 50, 'nugget': 3}
 # iso_model = validate_kriging('exponential', variogram_parameters, final_data, y, fwxvec, fwyvec)  
