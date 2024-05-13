@@ -19,6 +19,10 @@ OBS_XYZ_gdf = pd.read_csv("OBS_XYZ_gdf.csv")  # Assuming it's a CSV file
 X = OBS_XYZ_gdf[['X', 'Y']]
 y = OBS_XYZ_gdf['Z']
 
+data_x = OBS_XYZ_gdf['X']
+data_y = OBS_XYZ_gdf['Y']
+data_z = OBS_XYZ_gdf['Z']
+
 # Generate a meshgrid of X and Y values
 x_min, x_max = X['X'].min(), X['X'].max()
 y_min, y_max = X['Y'].min(), X['Y'].max()
@@ -71,11 +75,13 @@ Z_mesh_tree = tree_reg.predict(np.column_stack((X_mesh.ravel(), Y_mesh.ravel()))
 Z_mesh_tree = Z_mesh_tree.reshape(X_mesh.shape)
 
 # Plot the surface
-fig = plt.figure(figsize=(10, 8))
+fig = plt.figure(figsize=(12, 10))
 ax = fig.add_subplot(111, projection='3d')
 
 # Plot the surface of the predicted plane
 surf = ax.plot_surface(X_mesh, Y_mesh, Z_mesh_tree, cmap='viridis', edgecolor='none')
+
+ax.scatter(data_x, data_y, data_z, color='red', marker='o', s=4) 
 
 # Set labels and title
 ax.set_xlabel('X')
@@ -86,8 +92,11 @@ ax.set_title('Predicted Surface from Decision Tree Regressor')
 # Add color bar
 fig.colorbar(surf, shrink=0.5, aspect=5)
 
+ax.view_init(elev=90, azim=-90)
+plt.savefig('decision_tree_pred_surface_points_above.png')
+
 ax.view_init(elev=30, azim=-70)
-plt.savefig('decision_tree_pred_surface.png')
+plt.savefig('decision_tree_pred_surface_points.png')
 
 plt.show()
 
@@ -111,11 +120,13 @@ Z_mesh_svr = svr.predict(X_mesh_scaled)
 Z_mesh_svr = Z_mesh_svr.reshape(X_mesh.shape)
 
 # Plot the surface
-fig = plt.figure(figsize=(10, 8))
+fig = plt.figure(figsize=(12, 10))
 ax = fig.add_subplot(111, projection='3d')
 
 # Plot the surface of the predicted plane
 surf = ax.plot_surface(X_mesh, Y_mesh, Z_mesh_svr, cmap='viridis', edgecolor='none')
+
+ax.scatter(data_x, data_y, data_z, color='red', marker='o', s=4) 
 
 # Set labels and title
 ax.set_xlabel('X')
@@ -126,8 +137,11 @@ ax.set_title('Predicted Surface from Support Vector Regressor')
 # Add color bar
 fig.colorbar(surf, shrink=0.5, aspect=5)
 
+ax.view_init(elev=90, azim=-90)
+plt.savefig('SVR_pred_surface_points_above.png')
+
 ax.view_init(azim=-120)
-plt.savefig('SVR_pred_surface.png')
+plt.savefig('SVR_pred_surface_points.png')
 
 plt.show()
 
@@ -148,11 +162,13 @@ Z_pred_knn = knn_reg.predict(np.column_stack((X_mesh.ravel(), Y_mesh.ravel())))
 Z_mesh_knn = griddata((X_mesh.ravel(), Y_mesh.ravel()), Z_pred_knn, (X_mesh, Y_mesh), method='cubic')
 
 # Plot the surface
-fig = plt.figure(figsize=(10, 8))
+fig = plt.figure(figsize=(12, 10))
 ax = fig.add_subplot(111, projection='3d')
 
 # Plot the surface of the predicted plane
 surf = ax.plot_surface(X_mesh, Y_mesh, Z_mesh_knn, cmap='viridis', edgecolor='none')
+
+ax.scatter(data_x, data_y, data_z, color='red', marker='o', s=4) 
 
 # Set labels and title
 ax.set_xlabel('X')
@@ -163,8 +179,11 @@ ax.set_title('Predicted Surface from K-Nearest Neighbors Regressor')
 # Add color bar
 fig.colorbar(surf, shrink=0.5, aspect=5)
 
+ax.view_init(elev=90, azim=-90)
+plt.savefig('KNN_pred_surface_points_above.png')
+
 ax.view_init(elev=40, azim=-55)
-plt.savefig('KNN_pred_surface.png')
+plt.savefig('KNN_pred_surface_points.png')
 # ax.view_init(elev=45, azim=-120)
 
 
@@ -212,7 +231,7 @@ plt.show()
 Z_knn_absolute = DEM_convolution - Z_mesh_knn
 
 # Plot the surface
-fig = plt.figure(figsize=(10, 8))
+fig = plt.figure(figsize=(12, 10))
 ax = fig.add_subplot(111, projection='3d')
 
 # Plot the surface of the predicted plane
@@ -227,7 +246,7 @@ ax.set_title('KNN absolute pred surface')
 # Add color bar
 fig.colorbar(surf, shrink=0.5, aspect=5)
 
-ax.view_init(elev=40, azim=-55)
+ax.view_init(elev=90, azim=-90)
 plt.savefig('KNN_abs_pred_surface.png')
 # ax.view_init(elev=45, azim=-120)
 

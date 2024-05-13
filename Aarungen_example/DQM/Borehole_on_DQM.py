@@ -8,6 +8,7 @@ Created on Mon Feb 12 21:19:18 2024
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
 
 # Specify the path to your shapefile (without the file extension)
 shapefile_path = "./Losmasse/LosmasseFlate_20221201.shp"
@@ -83,6 +84,37 @@ import matplotlib.pyplot as plt
 from shapely.geometry import Point
 geometry = [Point(xy) for xy in zip(OBS_XYZ['Shape_X'], OBS_XYZ['Shape_Y'])]
 obs_xyz_gdf = gpd.GeoDataFrame(OBS_XYZ, geometry=geometry, crs=gdf_filtered_classes.crs)
+
+
+### Histogram on Unprocessed Data
+
+# Count wells with depth between 0 and 1
+zero_to_one_count = ((obs_xyz_gdf['blengdber_'] >= 0) & (obs_xyz_gdf['blengdber_'] < 1)).sum()
+
+# Filter out wells with depth between 0 and 1 for logarithmic binning
+obs_xyz_gdf_filtered = obs_xyz_gdf[obs_xyz_gdf['blengdber_'] >= 1]
+
+# Calculate log-spaced bin edges (starting from 1)
+bin_edges = np.logspace(np.log10(1), np.log10(46), num=10) 
+
+# Create the histogram with log bins (excluding 0 to 1)
+
+plt.figure(figsize=(10, 8))
+plt.hist(obs_xyz_gdf_filtered['blengdber_'], bins=bin_edges, edgecolor='k', alpha=0.7)
+# Add a separate bar for depths between 0 and 1
+plt.bar(0.8, zero_to_one_count, width=0.4, align='center', color='skyblue', label='Depth 0-1')
+#plt.bar(0.67, zero_to_one_count, width=2, align='center', color='skyblue', label='Depth 0-1')
+plt.title('Distribution of Well Depths (Logarithmic Bins with 0-1 Depth)')
+plt.xscale('log')
+plt.xticks(bin_edges, labels=[f"{x:.1f}" for x in bin_edges])
+plt.xlabel('Depth (meters)')
+plt.ylabel('Frequency')
+plt.grid(axis='y', alpha=0.5)
+plt.legend()  # Show the legend for the "Depth 0-1" bar
+
+plt.savefig('histogram_raw.png', dpi=300, bbox_inches='tight')
+
+plt.show()
 
 
 
@@ -190,7 +222,6 @@ plt.show()
 import geopandas as gpd
 import matplotlib.pyplot as plt
 from shapely.geometry import Point
-import numpy as np
 
 # Assuming gdf_processed and obs_xyz_gdf are your GeoDataFrames
 # Also assuming you have a given radius (in the same units as your coordinates)
@@ -282,4 +313,42 @@ ax.set_title('Scatter Plot of Points with Color-Coded Z values')
 
 # Show the plot
 plt.show()
+
+
+#%% Histogram
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+# Count wells with depth between 0 and 1
+zero_to_one_count = ((obs_xyz_gdf['blengdber_'] >= 0) & (obs_xyz_gdf['blengdber_'] < 1)).sum()
+
+# Filter out wells with depth between 0 and 1 for logarithmic binning
+obs_xyz_gdf_filtered = obs_xyz_gdf[obs_xyz_gdf['blengdber_'] >= 1]
+
+# Calculate log-spaced bin edges (starting from 1)
+bin_edges = np.logspace(np.log10(1), np.log10(46), num=10) 
+
+# Create the histogram with log bins (excluding 0 to 1)
+
+plt.figure(figsize=(10, 8))
+plt.hist(obs_xyz_gdf_filtered['blengdber_'], bins=bin_edges, edgecolor='k', alpha=0.7)
+# Add a separate bar for depths between 0 and 1
+plt.bar(0.8, zero_to_one_count, width=0.4, align='center', color='skyblue', label='Depth 0-1')
+#plt.bar(0.67, zero_to_one_count, width=2, align='center', color='skyblue', label='Depth 0-1')
+
+plt.title('Distribution of Well Depths (Logarithmic Bins with 0-1 Depth)')
+plt.xscale('log')
+plt.xticks(bin_edges, labels=[f"{x:.1f}" for x in bin_edges])
+plt.xlabel('Depth (meters)')
+plt.ylabel('Frequency')
+plt.grid(axis='y', alpha=0.5)
+plt.legend()  # Show the legend for the "Depth 0-1" bar
+
+plt.savefig('histogram_preprocessed.png', dpi=300, bbox_inches='tight')
+
+plt.show()
+
+
 

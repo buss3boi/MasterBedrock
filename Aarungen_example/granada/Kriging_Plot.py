@@ -40,12 +40,17 @@ dem_conv_krige_path = os.path.join(DQM_path, 'dem_convoluted_kriging.csv')
 DEM_convolution = pd.read_csv(dem_conv_krige_path)
 
 
-#%% Plot prediciton surface
-
 # Extracting X, Y, and Z values from OBS_XYZ
 x = OBS_XYZ_gdf['X'].values
 y = OBS_XYZ_gdf['Y'].values
 z = OBS_XYZ_gdf['Z'].values
+
+data_x = OBS_XYZ_gdf['X']
+data_y = OBS_XYZ_gdf['Y']
+data_z = OBS_XYZ_gdf['Z']
+
+
+#%% Plot prediciton surface
 
 
 # Exponential auto, increased nugget = {'range': 2275, 'sill': 43, 'nugget': 5}
@@ -100,7 +105,7 @@ plt.show()
 
 
 # Plot the 3D kriging residuals
-fig = plt.figure(figsize=(10, 8))
+fig = plt.figure(figsize=(12, 10))
 ax = fig.add_subplot(111, projection='3d')
 surf = ax.plot_surface(wx, wy, ss, cmap='viridis')
 
@@ -113,7 +118,7 @@ ax.set_title('Kriging Variance Surface')
 # Add a color bar which maps values to colors
 fig.colorbar(surf, shrink=0.5, aspect=5)
 
-ax.view_init(elev=35, azim=-60)
+ax.view_init(elev=90, azim=-90)
 
 plt.savefig('kriging_var_surface.png')
 plt.show()
@@ -121,12 +126,6 @@ plt.show()
 
 
 #%% Curve fit prediction surface
-
-# Extracting X, Y, and Z values from OBS_XYZ
-x = OBS_XYZ_gdf['X'].values
-y = OBS_XYZ_gdf['Y'].values
-z = OBS_XYZ_gdf['Z'].values
-
 
 # Exponential auto, increased nugget = {'range': 2275, 'sill': 43, 'nugget': 5}
 # Exponential curve_fit auto increased nugget variogram_parameters = {'range': 1826.09, 'sill':46, 'nugget': 7}
@@ -180,7 +179,7 @@ plt.show()
 
 
 # Plot the 3D kriging residuals
-fig = plt.figure(figsize=(10, 8))
+fig = plt.figure(figsize=(12, 10))
 ax = fig.add_subplot(111, projection='3d')
 surf = ax.plot_surface(wx, wy, ss, cmap='viridis')
 
@@ -193,7 +192,7 @@ ax.set_title('Kriging Variance Surface')
 # Add a color bar which maps values to colors
 fig.colorbar(surf, shrink=0.5, aspect=5)
 
-ax.view_init(elev=35, azim=-60)
+ax.view_init(elev=90, azim=-90)
 
 plt.savefig('kriging_var_surface_skg.png')
 plt.show()
@@ -204,6 +203,11 @@ plt.show()
 
 #%% Kriging increased nugget prediction surface
 
+
+# Extracting X, Y, and Z values from OBS_XYZ
+x = OBS_XYZ_gdf['X'].values
+y = OBS_XYZ_gdf['Y'].values
+z = OBS_XYZ_gdf['Z'].values
 
 # Variogram with custom parameters
 variogram_parameters = {'range': 2275, 'sill': 43, 'nugget': 5}
@@ -232,9 +236,13 @@ print('Kriging Variance Inc Nug: {}'.format(vari))
 wx, wy = np.meshgrid(wxvec, wyvec)
 
 # Plot the 3D surface
-fig = plt.figure(figsize=(10, 8))
+fig = plt.figure(figsize=(12, 10))
 ax = fig.add_subplot(111, projection='3d')
 surf = ax.plot_surface(wx, wy, z_pred, cmap='viridis')
+
+# Plot the original data points
+ax.scatter(data_x, data_y, data_z, color='red', marker='o', s=4) 
+
 
 # Add labels and title
 ax.set_xlabel('X')
@@ -245,14 +253,18 @@ ax.set_title('Kriging Prediction Surface')
 # Add a color bar which maps values to colors
 fig.colorbar(surf, shrink=0.5, aspect=5)
 
+ax.view_init(elev=90, azim=-90)
+
+plt.savefig('kriging_pred_surface_nug_points_above.png')
+
 ax.view_init(elev=35, azim=-60)
 
-plt.savefig('kriging_pred_surface_nug.png')
-plt.show()
+plt.savefig('kriging_pred_surface_nug_points.png')
+
 
 
 # Plot the 3D kriging residuals
-fig = plt.figure(figsize=(10, 8))
+fig = plt.figure(figsize=(12, 10))
 ax = fig.add_subplot(111, projection='3d')
 surf = ax.plot_surface(wx, wy, ss, cmap='viridis')
 
@@ -265,7 +277,7 @@ ax.set_title('Kriging Variance Surface')
 # Add a color bar which maps values to colors
 fig.colorbar(surf, shrink=0.5, aspect=5)
 
-ax.view_init(elev=35, azim=-60)
+ax.view_init(elev=90, azim=-90)
 
 plt.savefig('kriging_var_surface_nug.png')
 plt.show()
@@ -327,7 +339,7 @@ plt.show()
 
 
 # Plot the 3D kriging residuals
-fig = plt.figure(figsize=(10, 8))
+fig = plt.figure(figsize=(12, 10))
 ax = fig.add_subplot(111, projection='3d')
 surf = ax.plot_surface(wx, wy, ss, cmap='viridis')
 
@@ -340,7 +352,7 @@ ax.set_title('Kriging Variance Surface')
 # Add a color bar which maps values to colors
 fig.colorbar(surf, shrink=0.5, aspect=5)
 
-ax.view_init(elev=35, azim=-60)
+ax.view_init(elev=90, azim=-90)
 
 plt.savefig('kriging_var_surface_pykrige_scaled.png')
 plt.show()
@@ -403,7 +415,7 @@ plt.show()
 
 
 # # Plot the 3D kriging residuals
-# fig = plt.figure(figsize=(10, 8))
+# fig = plt.figure(figsize=(12, 10))
 # ax = fig.add_subplot(111, projection='3d')
 # surf = ax.plot_surface(wx, wy, ss, cmap='viridis')
 
@@ -416,7 +428,7 @@ plt.show()
 # # Add a color bar which maps values to colors
 # fig.colorbar(surf, shrink=0.5, aspect=5)
 
-# ax.view_init(elev=35, azim=-60)
+# ax.view_init(elev=90, azim=-90)
 
 # plt.savefig('kriging_var_surface_prescaled_data.png')
 # plt.show()
@@ -487,7 +499,7 @@ plt.show()
 
 
 # Plot the 3D kriging residuals
-fig = plt.figure(figsize=(10, 8))
+fig = plt.figure(figsize=(12, 10))
 ax = fig.add_subplot(111, projection='3d')
 surf = ax.plot_surface(wx, wy, ss, cmap='viridis')
 
@@ -500,7 +512,8 @@ ax.set_title('Kriging Variance Surface')
 # Add a color bar which maps values to colors
 fig.colorbar(surf, shrink=0.5, aspect=5)
 
-ax.view_init(elev=35, azim=-60)
+ax.view_init(elev=90, azim=-90)
+
 
 plt.savefig('kriging_var_surface_standardscaled.png')
 plt.show()
@@ -538,7 +551,7 @@ plt.show()
 Z_kriging_absolute = DEM_convolution - z_pred
 
 # Plot the surface
-fig = plt.figure(figsize=(10, 8))
+fig = plt.figure(figsize=(12, 10))
 ax = fig.add_subplot(111, projection='3d')
 
 # Plot the surface of the predicted plane
@@ -553,7 +566,7 @@ ax.set_title('KNN absolute pred surface')
 # Add color bar
 fig.colorbar(surf, shrink=0.5, aspect=5)
 
-ax.view_init(elev=40, azim=-55)
+ax.view_init(elev=90, azim=-90)
 plt.savefig('kriging_abs_pred_surface.png')
 # ax.view_init(elev=45, azim=-120)
 

@@ -43,14 +43,14 @@ Z_pred_rf = rf_reg.predict(np.column_stack((X_mesh.ravel(), Y_mesh.ravel())))
 Z_mesh_rf = Z_pred_rf.reshape(X_mesh.shape)
 
 # Plot the surface
-fig = plt.figure(figsize=(10, 8))
+fig = plt.figure(figsize=(12, 10))
 ax = fig.add_subplot(111, projection='3d')
 
 # Plot the surface of the predicted plane
 surf = ax.plot_surface(X_mesh, Y_mesh, Z_mesh_rf, cmap='viridis', edgecolor='none')
 
 # Plot the original data points
-ax.scatter(data_x, data_y, data_z, color='red', marker='o', s=10) 
+ax.scatter(data_x, data_y, data_z, color='red', marker='o', s=4) 
 
 
 # Set labels and title
@@ -61,6 +61,9 @@ ax.set_title('Predicted Surface from Random Forest Regressor')
 
 # Add color bar
 fig.colorbar(surf, shrink=0.5, aspect=5)
+
+ax.view_init(elev=90, azim=-90)
+plt.savefig('random_forest_pred_surface_points_above.png')
 
 ax.view_init(elev=35, azim=-60)
 plt.savefig('random_forest_pred_surface_points.png')
@@ -81,14 +84,14 @@ Z_pred_gb = gb_reg.predict(np.column_stack((X_mesh.ravel(), Y_mesh.ravel())))
 Z_mesh_gb = Z_pred_gb.reshape(X_mesh.shape)
 
 # Plot the surface
-fig = plt.figure(figsize=(10, 8))
+fig = plt.figure(figsize=(12, 10))
 ax = fig.add_subplot(111, projection='3d')
 
 # Plot the surface of the predicted plane
 surf = ax.plot_surface(X_mesh, Y_mesh, Z_mesh_gb, cmap='viridis', edgecolor='none')
 
 # Plot the original data points
-ax.scatter(data_x, data_y, data_z, color='red', marker='o', s=10) 
+ax.scatter(data_x, data_y, data_z, color='red', marker='o', s=4) 
 
 # Set labels and title
 ax.set_xlabel('X')
@@ -99,10 +102,14 @@ ax.set_title('Predicted Surface from Gradient Boosting Regressor')
 # Add color bar
 fig.colorbar(surf, shrink=0.5, aspect=5)
 
+ax.view_init(elev=90, azim=-90)
+plt.savefig('gradient_boosting_pred_surface_points_above.png')
+
 ax.view_init(elev=35, azim=-60)
 plt.savefig('gradient_boosting_pred_surface_points.png')
 
 plt.show()
+
 
 
 #%% XGBoost regressor prediction surface
@@ -118,14 +125,14 @@ Z_pred_xgb = xgb_reg.predict(np.column_stack((X_mesh.ravel(), Y_mesh.ravel())))
 Z_mesh_xgb = Z_pred_xgb.reshape(X_mesh.shape)
 
 # Plot the surface
-fig = plt.figure(figsize=(10, 8))
+fig = plt.figure(figsize=(12, 10))
 ax = fig.add_subplot(111, projection='3d')
 
 # Plot the surface of the predicted plane
 surf = ax.plot_surface(X_mesh, Y_mesh, Z_mesh_xgb, cmap='viridis', edgecolor='none')
 
 # Plot the original data points
-ax.scatter(data_x, data_y, data_z, color='red', marker='o', s=10) 
+ax.scatter(data_x, data_y, data_z, color='red', marker='o', s=4) 
 
 # Set labels and title
 ax.set_xlabel('X')
@@ -135,6 +142,9 @@ ax.set_title('Predicted Surface from XGBoost Regressor')
 
 # Add color bar
 fig.colorbar(surf, shrink=0.5, aspect=5)
+
+ax.view_init(elev=90, azim=-90)
+plt.savefig('xgboost_pred_surface_points_above.png')
 
 ax.view_init(elev=35, azim=-60)
 plt.savefig('xgboost_pred_surface_points.png')
@@ -155,7 +165,7 @@ DEM_convolution = averaged_df.to_numpy(dtype='float', na_value=np.nan)
 Z_xgb_absolute = DEM_convolution - Z_mesh_xgb
 
 # Plot the surface
-fig = plt.figure(figsize=(10, 8))
+fig = plt.figure(figsize=(12, 10))
 ax = fig.add_subplot(111, projection='3d')
 
 # Plot the surface of the predicted plane
@@ -170,7 +180,7 @@ ax.set_title('XGBoost absolute pred surface')
 # Add color bar
 fig.colorbar(surf, shrink=0.5, aspect=5)
 
-ax.view_init(elev=40, azim=-55)
+ax.view_init(elev=90, azim=-90)
 plt.savefig('XGBoost_abs_pred_surface.png')
 # ax.view_init(elev=45, azim=-120)
 
